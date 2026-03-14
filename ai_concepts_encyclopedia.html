@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Concepts Encyclopedia — 2026 Edition</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg0: #f7f6f2; --bg1: #ffffff; --bg2: #f0efe9; --bg3: #e8e6de;
+  --t1: #1a1a18; --t2: #6b6a65; --t3: #9c9a92;
+  --b1: rgba(0,0,0,0.35); --b2: rgba(0,0,0,0.18); --b3: rgba(0,0,0,0.1);
+  --r-md: 8px; --r-lg: 12px; --r-xl: 16px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg0: #181816; --bg1: #1e1e1c; --bg2: #252523; --bg3: #2e2e2b;
+    --t1: #e8e6de; --t2: #9c9a92; --t3: #6b6a65;
+    --b1: rgba(255,255,255,0.3); --b2: rgba(255,255,255,0.15); --b3: rgba(255,255,255,0.08);
+  }
+}
+body { font-family: var(--font); background: var(--bg0); color: var(--t1); min-height: 100vh; }
+
+/* ── LAYOUT ── */
+.shell { display: flex; min-height: 100vh; }
+.sidebar { width: 260px; flex-shrink: 0; background: var(--bg1); border-right: 0.5px solid var(--b3); position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+.main { flex: 1; min-width: 0; padding: 2rem 2.5rem 4rem; max-width: 900px; }
+
+/* ── SIDEBAR ── */
+.sidebar-head { padding: 20px 16px 12px; border-bottom: 0.5px solid var(--b3); }
+.sidebar-head h2 { font-size: 13px; font-weight: 500; color: var(--t1); }
+.sidebar-head p { font-size: 11px; color: var(--t3); margin-top: 2px; }
+.search-wrap { padding: 10px 12px; border-bottom: 0.5px solid var(--b3); }
+.search-input { width: 100%; background: var(--bg2); border: 0.5px solid var(--b2); border-radius: var(--r-md); padding: 7px 10px 7px 30px; font-size: 12px; color: var(--t1); font-family: var(--font); outline: none; }
+.search-input::placeholder { color: var(--t3); }
+.search-input:focus { border-color: var(--b1); }
+.search-wrap { position: relative; }
+.search-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); opacity: 0.4; pointer-events: none; }
+.cat-section { padding: 6px 0; }
+.cat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--t3); padding: 8px 16px 4px; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 6px 16px; cursor: pointer; font-size: 12px; color: var(--t2); transition: background 0.12s, color 0.12s; border-radius: 0; }
+.nav-item:hover { background: var(--bg2); color: var(--t1); }
+.nav-item.active { background: var(--bg3); color: var(--t1); font-weight: 500; }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.nav-new { font-size: 9px; font-weight: 600; color: #0F6E56; background: #0F6E5615; padding: 1px 4px; border-radius: 6px; margin-left: auto; }
+.sidebar-count { padding: 10px 16px; font-size: 11px; color: var(--t3); border-top: 0.5px solid var(--b3); margin-top: auto; }
+
+/* ── HEADER ── */
+.page-header { margin-bottom: 2rem; }
+.page-header h1 { font-size: 26px; font-weight: 500; color: var(--t1); letter-spacing: -0.3px; }
+.page-header-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+.edition-pill { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; background: #534AB722; color: #534AB7; }
+.new-pill { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; background: #0F6E5618; color: #0F6E56; }
+.page-header p { font-size: 14px; color: var(--t2); margin-top: 8px; line-height: 1.6; max-width: 660px; }
+
+/* ── FILTERS ── */
+.filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.filter-btn { font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--b2); background: var(--bg1); color: var(--t2); cursor: pointer; transition: all 0.15s; }
+.filter-btn:hover { border-color: var(--b1); color: var(--t1); }
+.filter-btn.active { background: var(--t1); color: var(--bg1); border-color: var(--t1); }
+
+/* ── CONCEPT CARDS GRID ── */
+.concepts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+.concept-card { background: var(--bg1); border: 0.5px solid var(--b3); border-radius: var(--r-lg); padding: 14px 16px; cursor: pointer; transition: border-color 0.15s, background 0.15s; position: relative; }
+.concept-card:hover { border-color: var(--b2); background: var(--bg2); }
+.concept-card.active { border-color: var(--b1); }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+.card-title { font-size: 13px; font-weight: 500; color: var(--t1); flex: 1; padding-right: 6px; }
+.card-badge { font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
+.card-new-tag { font-size: 9px; font-weight: 600; color: #0F6E56; background: #0F6E5615; padding: 1px 5px; border-radius: 6px; position: absolute; top: 10px; right: 10px; }
+.card-summary { font-size: 11px; color: var(--t2); line-height: 1.55; }
+.card-cat { font-size: 10px; color: var(--t3); margin-top: 8px; }
+
+/* ── DETAIL PANEL ── */
+.detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 100; }
+.detail-overlay.open { display: block; }
+.detail-drawer { position: fixed; right: 0; top: 0; bottom: 0; width: min(560px, 100vw); background: var(--bg1); border-left: 0.5px solid var(--b2); z-index: 101; overflow-y: auto; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.25s ease; }
+.detail-drawer.open { transform: translateX(0); }
+.drawer-header { padding: 20px 24px 16px; border-bottom: 0.5px solid var(--b3); position: sticky; top: 0; background: var(--bg1); z-index: 1; }
+.drawer-close { position: absolute; top: 16px; right: 16px; width: 28px; height: 28px; border-radius: 50%; background: var(--bg2); border: 0.5px solid var(--b2); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--t2); font-size: 14px; }
+.drawer-close:hover { background: var(--bg3); }
+.drawer-title { font-size: 20px; font-weight: 500; color: var(--t1); padding-right: 36px; }
+.drawer-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.drawer-tag { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+.drawer-new-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: #0F6E5618; color: #0F6E56; }
+.drawer-body { padding: 20px 24px; flex: 1; }
+.drawer-section { margin-bottom: 20px; }
+.drawer-section:last-child { margin-bottom: 0; }
+.section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--t3); margin-bottom: 8px; }
+.section-text { font-size: 14px; color: var(--t2); line-height: 1.7; }
+.examples-list { display: flex; flex-direction: column; gap: 8px; }
+.example-item { background: var(--bg2); border: 0.5px solid var(--b3); border-radius: var(--r-md); padding: 10px 14px; }
+.example-label { font-size: 12px; font-weight: 500; color: var(--t1); margin-bottom: 3px; }
+.example-desc { font-size: 12px; color: var(--t2); line-height: 1.55; }
+.analogy-block { background: var(--bg2); border-left: 3px solid; border-radius: 0 var(--r-md) var(--r-md) 0; padding: 12px 14px; font-size: 14px; color: var(--t2); line-height: 1.65; }
+.analogy-block em { color: var(--t1); font-style: normal; font-weight: 500; }
+.why-block { background: var(--bg2); border-radius: var(--r-md); padding: 12px 14px; font-size: 13px; color: var(--t2); line-height: 1.6; border: 0.5px solid var(--b3); }
+.related-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.related-chip { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--b2); background: var(--bg2); color: var(--t2); cursor: pointer; }
+.related-chip:hover { border-color: var(--b1); color: var(--t1); }
+
+/* ── EMPTY STATE ── */
+.empty { text-align: center; padding: 4rem 2rem; color: var(--t3); }
+.empty h3 { font-size: 15px; font-weight: 500; margin-bottom: 6px; color: var(--t2); }
+.empty p { font-size: 13px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .sidebar { display: none; }
+  .main { padding: 1.5rem 1.25rem 3rem; }
+  .concepts-grid { grid-template-columns: 1fr; }
+  .detail-drawer { width: 100vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-head">
+      <h2>AI Encyclopedia</h2>
+      <p>2026 Edition · 60 concepts</p>
+    </div>
+    <div class="search-wrap" style="padding:10px 12px;">
+      <svg class="search-icon" width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.2"/><line x1="8.5" y1="8.5" x2="12" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <input class="search-input" type="text" placeholder="Search concepts..." id="sidebar-search" oninput="filterSidebar(this.value)">
+    </div>
+    <div id="sidebar-nav"></div>
+    <div class="sidebar-count" id="sidebar-count">60 concepts</div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="page-header">
+      <h1>AI Concepts Encyclopedia</h1>
+      <div class="page-header-meta">
+        <span class="edition-pill">2026 Edition</span>
+        <span class="new-pill">60 concepts</span>
+      </div>
+      <p>Every important AI term explained in plain English — from foundational ideas to the newest 2025–2026 concepts. Search, filter by category, or click any card for a full explanation.</p>
+    </div>
+
+    <div class="filter-bar" id="filter-bar"></div>
+
+    <div class="concepts-grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none">
+      <h3>No concepts found</h3>
+      <p>Try a different search term or clear the filter.</p>
+    </div>
+  </main>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="detail-overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="detail-drawer" id="drawer">
+  <div class="drawer-header">
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    <div class="drawer-title" id="d-title"></div>
+    <div class="drawer-tags" id="d-tags"></div>
+  </div>
+  <div class="drawer-body" id="d-body"></div>
+</div>
+
+<script>
+const categories = [
+  { id: "foundations",  label: "Foundations",       color: "#888780" },
+  { id: "learning",     label: "Learning Methods",  color: "#534AB7" },
+  { id: "architecture", label: "Model Architecture",color: "#185FA5" },
+  { id: "interfaces",   label: "Senses & Language", color: "#0F6E56" },
+  { id: "knowledge",    label: "Knowledge & Memory",color: "#BA7517" },
+  { id: "action",       label: "Action & Agents",   color: "#993C1D" },
+  { id: "safety",       label: "Safety & Society",  color: "#993356" },
+  { id: "emerging",     label: "Emerging 2025–26",  color: "#0F6E56" },
+];
+
+const concepts = [
+  // ── FOUNDATIONS ──
+  { id:"ai", cat:"foundations", title:"Artificial Intelligence (AI)", badge:"Umbrella", isNew:false,
+    summary:"The broad field of making computers do things that normally need human intelligence.",
+    explanation:"AI is the umbrella concept covering any technique that makes machines behave intelligently — recognizing patterns, making decisions, understanding language, or perceiving the world. It's not one technology but a goal, achieved through many different methods including rules, statistics, and neural networks. When people say 'AI,' they could mean anything from a simple if-then rule to a trillion-parameter neural network.",
+    examples:[
+      {label:"Chess engine (1990s)", desc:"Deep Blue used hand-coded rules to beat Kasparov in 1997. Smart, but brittle — change the game and it fails."},
+      {label:"Gmail spam filter", desc:"Early filters used simple rules: 'if subject contains FREE MONEY, mark spam.' Basic AI, but effective."},
+      {label:"ChatGPT (2023+)", desc:"Uses deep learning and trained knowledge — a completely different approach to achieving intelligent behavior."},
+    ],
+    analogy:"AI is like the word <em>'sport'</em> — it covers chess, marathons, and swimming. They're all sports but work completely differently. Lumping them together is useful for conversation but misleading for depth.",
+    why:"Understanding AI as an umbrella term prevents confusion. When a company says 'we use AI,' it could mean a simple decision tree or a billion-parameter model. The layers beneath the umbrella are what actually matter.",
+    related:["ml","deep-learning","agi"]
+  },
+  { id:"ml", cat:"foundations", title:"Machine Learning (ML)", badge:"Core method", isNew:false,
+    summary:"AI that improves by finding patterns in data, rather than following hand-written rules.",
+    explanation:"Traditional software runs on explicit instructions: if X, do Y. Machine Learning flips this — instead of writing rules, you feed the system thousands of labeled examples and let it figure out the rules itself. The system adjusts its internal parameters to minimize errors on the training data. Given enough data, ML systems discover patterns humans often miss.",
+    examples:[
+      {label:"Netflix recommendations", desc:"No human programmed 'people who watch Stranger Things like Dark.' ML discovered this pattern from 200M+ users' watching history."},
+      {label:"Credit card fraud detection", desc:"Banks' ML models learned 'normal' spending patterns per customer. A purchase in Paris 5 minutes after one in Chicago triggers a fraud alert."},
+      {label:"Spotify Discover Weekly", desc:"Finds listeners with similar taste, then recommends what they liked that you haven't heard. Pure pattern recognition from listening data."},
+    ],
+    analogy:"Teaching a child to recognize dogs the old way: write every rule — four legs, fur, barks. A three-legged dog breaks the rules. The <em>ML way: show 10,000 photos</em> labeled dog vs. not-dog until intuition develops. That intuition generalizes to weird edge cases.",
+    why:"ML made it possible to solve problems too complex for hand-written rules — fraud detection, recommendations, speech recognition, weather prediction. If the problem has data and a clear goal, ML can often learn to solve it.",
+    related:["deep-learning","supervised","unsupervised","reinforcement"]
+  },
+  { id:"deep-learning", cat:"foundations", title:"Deep Learning", badge:"Neural networks", isNew:false,
+    summary:"ML using multi-layered neural networks that learn increasingly abstract patterns.",
+    explanation:"Deep Learning is ML with neural networks that have many layers. Each layer learns to detect increasingly abstract features. In an image model: layer 1 detects edges, layer 5 detects shapes, layer 50 detects faces. 'Deep' refers to many layers stacked — modern models have hundreds. This architecture, combined with massive datasets and GPU compute, is what made modern AI actually work well.",
+    examples:[
+      {label:"iPhone Face ID", desc:"Maps 30,000 infrared dots onto your face. Layer 1 detects dot patterns, layer 50 identifies it as your specific face geometry — in under a second."},
+      {label:"Google speech-to-text", desc:"Early layers detect sound wave patterns. Middle layers detect phonemes (sound units). Later layers map to words and sentences."},
+      {label:"Cancer detection in X-rays", desc:"Models trained on millions of labeled scans now detect tumors earlier than radiologists — finding subtle patterns invisible to the human eye."},
+    ],
+    analogy:"A factory assembly line for understanding. <em>Worker 1</em> notices raw shapes. <em>Worker 5</em> recognizes objects. <em>Worker 20</em> understands the full scene. Each worker builds on the previous — that's deep learning's stacked layers.",
+    why:"Deep learning was the breakthrough that made voice recognition, image recognition, and language understanding actually work in everyday life. Before it, all three were frustratingly bad.",
+    related:["ml","neural-network","transformer","cnn"]
+  },
+  { id:"agi", cat:"foundations", title:"AGI — Artificial General Intelligence", badge:"Theoretical", isNew:false,
+    summary:"A hypothetical AI that can perform any intellectual task a human can — we don't have it yet.",
+    explanation:"Today's AI is 'narrow' — it's excellent at specific tasks (playing chess, generating text, recognizing faces) but can't transfer that skill to unrelated tasks. AGI would be an AI that can learn and reason across any domain, the way humans do. It could study medicine today, write poetry tomorrow, and design a bridge the day after — with no domain-specific retraining. No one has built AGI yet. Most researchers estimate it's still years or decades away, though timelines are hotly debated.",
+    examples:[
+      {label:"What we have: narrow AI", desc:"GPT-4 is extraordinary at language but can't drive a car. Tesla's autopilot is great at driving but can't write a poem. These are narrow AIs — excellent in domain, useless outside it."},
+      {label:"What AGI would look like", desc:"An AGI given a new job — say, 'become a competitive chess player' — would figure out how to learn chess without being specifically programmed for it, drawing on general reasoning."},
+      {label:"OpenAI's stated mission", desc:"OpenAI's founding mission is explicitly to 'ensure that artificial general intelligence benefits all of humanity' — treating AGI as an expected future outcome, not science fiction."},
+    ],
+    analogy:"Today's AI is like <em>a set of specialist tools</em> — an amazing hammer, a brilliant screwdriver, a superb saw. Each is better than a human for its specific job. AGI would be <em>a skilled craftsperson</em> who picks up any tool and figures out how to use it.",
+    why:"AGI is important to understand because it's the stated goal of the biggest AI labs, drives enormous investment, and frames the most serious long-term safety concerns. The gap between today's AI and AGI is where most of the current research lives.",
+    related:["ai","safety-alignment","reasoning-models"]
+  },
+
+  // ── LEARNING METHODS ──
+  { id:"supervised", cat:"learning", title:"Supervised Learning", badge:"Labeled data", isNew:false,
+    summary:"Training AI on examples that are already labeled with the correct answer.",
+    explanation:"Supervised learning is the most common form of ML. You provide a dataset where every example has a known label — thousands of emails labeled 'spam' or 'not spam,' thousands of images labeled 'cat' or 'dog,' thousands of loan applications labeled 'defaulted' or 'repaid.' The model learns to predict the label for new, unseen examples by finding patterns in the labeled training data.",
+    examples:[
+      {label:"Email spam detection", desc:"Train on 1 million emails, each labeled spam or not. The model learns which words, sender patterns, and structures predict spam — then applies this to new emails."},
+      {label:"Medical diagnosis", desc:"Train on 500,000 X-rays, each labeled with whether the patient had cancer. The model learns the visual patterns that correlate with cancer."},
+      {label:"Loan default prediction", desc:"Train on 10 years of loan records with outcomes. The model learns which applicant characteristics predict default risk."},
+    ],
+    analogy:"Like a student <em>studying with an answer key</em> — they see the question and the correct answer together, learning the pattern. Unsupervised learning, by contrast, is like studying with no answer key at all.",
+    why:"Supervised learning powers most commercial AI today — fraud detection, medical imaging, credit scoring, search ranking. Wherever you have historical data with known outcomes, supervised learning can find the pattern.",
+    related:["ml","unsupervised","reinforcement","fine-tuning"]
+  },
+  { id:"unsupervised", cat:"learning", title:"Unsupervised Learning", badge:"No labels", isNew:false,
+    summary:"Training AI on data with no labels — letting it discover structure on its own.",
+    explanation:"Unsupervised learning finds patterns in data without being told what to look for. There are no labeled examples — the algorithm must discover the underlying structure of the data by itself. The two main tasks are clustering (grouping similar things together) and dimensionality reduction (finding compact representations of complex data). It's harder to evaluate than supervised learning because there's no 'correct answer' to check against.",
+    examples:[
+      {label:"Customer segmentation", desc:"A retailer feeds in purchase history with no labels. The ML system discovers on its own that there are 5 distinct customer types — high-frequency small purchases, occasional big spenders, seasonal shoppers, etc."},
+      {label:"Anomaly detection", desc:"A network security system learns what 'normal' traffic looks like with no labeled examples of attacks. When a pattern deviates significantly, it flags it as a potential anomaly."},
+      {label:"Topic modeling in news", desc:"Feed in 10,000 news articles. The algorithm discovers on its own that they cluster around ~20 topics — politics, sports, technology, health — without being told what topics to look for."},
+    ],
+    analogy:"Like a librarian who's given a room full of books with no labels and told to organize them. <em>They figure out their own system</em> — by genre, era, reading level — based on the content itself.",
+    why:"Unsupervised learning is essential when you don't know what you're looking for, when labeling data is too expensive, or when you want to discover hidden structure in your data.",
+    related:["ml","supervised","embeddings"]
+  },
+  { id:"reinforcement", cat:"learning", title:"Reinforcement Learning (RL)", badge:"Reward signal", isNew:false,
+    summary:"Training AI through trial, error, and rewards — like training a dog.",
+    explanation:"In reinforcement learning, an agent takes actions in an environment and receives rewards or penalties for those actions. Over millions of trials, it learns which sequences of actions maximize cumulative reward. There's no labeled training data — the learning signal is entirely the reward function. This is how AlphaGo mastered chess, how robots learn to walk, and how RLHF (reinforcement learning from human feedback) trains modern LLMs to be helpful.",
+    examples:[
+      {label:"AlphaGo mastering Go", desc:"DeepMind's AlphaGo played millions of games against itself. Each win was a reward. After enough games, it discovered strategies no human had ever conceived — then beat the world champion 4-1."},
+      {label:"Robot learning to walk", desc:"A simulated robot tries random movements. When it falls, it's penalized. When it moves forward, it's rewarded. After millions of falls, it learns to walk — then run — without anyone programming the gait."},
+      {label:"RLHF for ChatGPT", desc:"Human raters compared pairs of AI responses and marked which was better. ChatGPT was trained to maximize these human preference scores — making it much more helpful and less harmful than a model trained on data alone."},
+    ],
+    analogy:"Training a dog with treats. You don't explain the rules — you <em>reward the behavior you want</em> and ignore (or penalize) what you don't. The dog figures out the rules through trial and error. RL is the same principle applied to AI.",
+    why:"RL is the technique that created superhuman game players, enabled modern robot locomotion, and is central to how LLMs are fine-tuned to be helpful and harmless through RLHF.",
+    related:["ml","rlhf","reasoning-models","safety-alignment"]
+  },
+  { id:"fine-tuning", cat:"learning", title:"Fine-Tuning", badge:"Specialization", isNew:false,
+    summary:"Taking a general pre-trained model and training it further on a specific domain or task.",
+    explanation:"Foundation models are trained on vast, diverse data to build broad knowledge. Fine-tuning takes that general model and continues training it on a smaller, domain-specific dataset. This adapts the model's behavior for a particular use case without training from scratch. A medical fine-tune of Claude would make it more accurate on clinical questions. A legal fine-tune would make it more precise on contract language. Fine-tuning is far cheaper than training from scratch.",
+    examples:[
+      {label:"Medical LLM", desc:"A hospital takes GPT-4 and fine-tunes it on 10M clinical notes, drug interactions, and diagnostic guidelines. The resulting model speaks fluent medical terminology and follows clinical reasoning patterns."},
+      {label:"Customer service bot", desc:"A telecom company fine-tunes an LLM on 5 years of customer service transcripts. The model learns the company's tone, product vocabulary, and common issue resolution paths."},
+      {label:"Code-specific models", desc:"GitHub Copilot is built on models fine-tuned on billions of lines of code from open-source repositories — making them far better at coding than general-purpose LLMs."},
+    ],
+    analogy:"Fine-tuning is like <em>hiring a generalist MBA graduate and sending them for 6 months of medical training</em>. They don't forget everything they knew — they build on it. Much cheaper than putting them through medical school from scratch.",
+    why:"Fine-tuning is the practical bridge between a general-purpose foundation model and a product-ready AI assistant. It's how companies customize AI for their domain without the $100M cost of training from scratch.",
+    related:["foundation-models","llm","rag","supervised"]
+  },
+  { id:"rlhf", cat:"learning", title:"RLHF", badge:"Human feedback", isNew:false,
+    summary:"Training AI to be helpful and harmless by learning from human ratings of its responses.",
+    explanation:"Reinforcement Learning from Human Feedback (RLHF) is the key technique that turned raw LLMs into useful assistants. Human raters compare pairs of model responses and indicate which is better — more helpful, more accurate, less harmful. A 'reward model' learns to predict human preferences. The main LLM is then fine-tuned using RL to maximize this reward model. This process is why ChatGPT and Claude feel like helpful assistants rather than raw text predictors.",
+    examples:[
+      {label:"ChatGPT's helpfulness", desc:"Before RLHF, GPT-3 would often give technically correct but unhelpful, verbose, or harmful responses. After RLHF, it learned to give concise, useful answers aligned with what humans actually wanted."},
+      {label:"Refusing harmful requests", desc:"RLHF teaches models to decline requests for dangerous information. Human raters marked refusals as better responses — the model learned this preference."},
+      {label:"Constitutional AI (Anthropic)", desc:"Anthropic extends RLHF with 'Constitutional AI' — giving the model a set of principles and having it critique its own outputs against those principles before human rating, making the process more scalable."},
+    ],
+    analogy:"Imagine training a new employee by having them <em>write 1,000 email drafts, then having their manager mark each pair: this one is better, that one is better</em>. The employee learns the manager's standards through thousands of examples — without the manager ever explaining the rules explicitly.",
+    why:"RLHF is arguably the most important practical technique in modern AI alignment. It's what makes LLMs safe enough to deploy publicly and helpful enough to be genuinely useful.",
+    related:["reinforcement","safety-alignment","fine-tuning","llm"]
+  },
+
+  // ── MODEL ARCHITECTURE ──
+  { id:"neural-network", cat:"architecture", title:"Neural Networks", badge:"Architecture", isNew:false,
+    summary:"Computing systems loosely inspired by the brain, made of connected layers of artificial neurons.",
+    explanation:"A neural network is a mathematical structure made of layers of simple units called neurons. Each neuron receives inputs, applies a mathematical function (called an activation function), and passes the result to the next layer. The connections between neurons have weights — numbers that determine how much each input matters. Training a neural network means adjusting these weights until the network produces correct outputs. Deep neural networks simply have many layers.",
+    examples:[
+      {label:"Image classifier", desc:"Input layer receives pixel values. Hidden layers detect edges, then shapes, then objects. Output layer produces probabilities for each possible class (cat: 92%, dog: 7%, other: 1%)."},
+      {label:"Language model prediction", desc:"Input: the words 'The cat sat on the'. Hidden layers process context and relationships. Output: probability distribution over all possible next words — 'mat' gets high probability."},
+      {label:"Fraud detection", desc:"Input: 50 transaction features (amount, location, time, merchant type). Hidden layers learn complex combinations that predict fraud. Output: fraud probability score 0–1."},
+    ],
+    analogy:"Each neuron is a very simple decision-maker: <em>'given these inputs with these weights, should I activate?'</em> Alone, each is trivial. Connected in millions, they form something capable of recognizing faces, understanding sentences, and playing chess.",
+    why:"Neural networks are the architectural foundation of almost all modern AI. Understanding what they are — and that they're just math, not magic — demystifies AI.",
+    related:["deep-learning","transformer","cnn","parameters"]
+  },
+  { id:"transformer", cat:"architecture", title:"Transformer", badge:"Architecture", isNew:false,
+    summary:"The neural network architecture behind all modern LLMs — processes entire sequences in parallel using attention.",
+    explanation:"Introduced by Google in 2017, the Transformer architecture revolutionized AI. Unlike earlier models that processed text sequentially (word by word), Transformers process all words in parallel using a mechanism called 'attention' — which lets every word consider every other word simultaneously. This parallel processing made training vastly faster (enabling much larger models) and the attention mechanism gave models a much better grasp of context and meaning.",
+    examples:[
+      {label:"ChatGPT / Claude / Gemini", desc:"All modern LLMs are transformers. GPT stands for 'Generative Pre-trained Transformer.' The architecture is why these models can hold context across long conversations."},
+      {label:"Google BERT for search", desc:"BERT (Bidirectional Encoder Representations from Transformers) lets Google understand the full context of your search query — not just the keywords — to return more relevant results."},
+      {label:"Vision Transformer (ViT)", desc:"Google adapted the Transformer to images by splitting photos into patches and treating each patch like a 'word.' ViT now rivals CNNs for image recognition tasks."},
+    ],
+    analogy:"Imagine reading a sentence and understanding each word in isolation vs. understanding how every word relates to every other word simultaneously. The Transformer does the second — it <em>reads everything at once, considering all relationships in parallel</em>, which is why it's so powerful for language.",
+    why:"The Transformer is arguably the most important architectural discovery in AI history. Virtually every frontier AI model — GPT-4, Claude, Gemini, Llama — is built on this 2017 architecture.",
+    related:["attention","deep-learning","llm","neural-network"]
+  },
+  { id:"attention", cat:"architecture", title:"Attention Mechanism", badge:"Core insight", isNew:false,
+    summary:"The part of a Transformer that lets every word 'look at' every other word to understand context.",
+    explanation:"Attention is the key innovation inside Transformers. When processing a word, instead of only using nearby context (like older models did), attention lets the model consider all other words in the sequence simultaneously, weighting each by relevance. The word 'bank' in 'river bank' vs. 'savings bank' gets different attention weights from surrounding words — helping the model resolve ambiguity. Multi-head attention runs this process multiple times in parallel, each head learning different relationships.",
+    examples:[
+      {label:"Pronoun resolution", desc:"In 'The trophy didn't fit in the suitcase because it was too big,' attention lets the model connect 'it' back to 'trophy' (not 'suitcase') by attending to size-relevant context."},
+      {label:"Machine translation", desc:"When translating 'The animal didn't cross the street because it was tired,' attention connects 'it' to 'animal' across the whole sentence, not just nearby words."},
+      {label:"Code understanding", desc:"When a coding model reads a function call, attention connects it back to the function definition elsewhere in the file — even if they're hundreds of lines apart."},
+    ],
+    analogy:"Reading a mystery novel and solving the murder. You don't just read the last page — you <em>connect clues from chapters 2, 7, and 14</em>. Attention is the mechanism that lets AI hold those connections across any distance in the text.",
+    why:"Attention is why Transformers are so much better than previous architectures at understanding context, resolving ambiguity, and handling long documents. It's the core insight that made modern LLMs possible.",
+    related:["transformer","llm","context-window"]
+  },
+  { id:"cnn", cat:"architecture", title:"CNN — Convolutional Neural Network", badge:"Vision", isNew:false,
+    summary:"The neural network architecture specialized for images — detects local patterns through sliding filters.",
+    explanation:"CNNs are designed specifically for grid-like data such as images. Instead of connecting every neuron to every pixel (which would require billions of parameters), CNNs use small filters that slide across the image detecting local patterns — edges, textures, shapes. Early layers detect simple features; later layers combine them into complex ones. This parameter-sharing makes CNNs extremely efficient for visual data.",
+    examples:[
+      {label:"Image classification", desc:"ImageNet models use CNNs to classify 1.2M images into 1,000 categories. The architecture is what made ImageNet competitions possible — accuracy went from 72% to 97% as CNNs improved."},
+      {label:"Object detection (YOLO)", desc:"YOLO (You Only Look Once) uses a CNN to detect multiple objects in a single image pass in real time — powering applications from self-driving to security cameras."},
+      {label:"Medical imaging", desc:"CNNs scan mammograms looking for micro-calcifications — tiny patterns invisible to the human eye — by detecting local pixel patterns the way a radiologist has learned to look."},
+    ],
+    analogy:"Imagine scanning a document for the word 'cat.' Instead of reading each word individually, you run a <em>small 'cat-shaped' template across the page</em> and see where it matches. CNNs do exactly this — running learned filter templates across images to find what they were trained to detect.",
+    why:"CNNs powered the computer vision revolution of the 2010s. Most industrial vision applications — quality inspection, medical imaging, facial recognition — still use CNN architectures or CNN-hybrid approaches.",
+    related:["deep-learning","computer-vision","transformer"]
+  },
+  { id:"parameters", cat:"architecture", title:"Parameters & Weights", badge:"Model scale", isNew:false,
+    summary:"The internal numbers in a neural network that are adjusted during training to encode learned knowledge.",
+    explanation:"A neural network's 'knowledge' is stored entirely in its parameters (also called weights) — billions of floating-point numbers that determine how strongly each neuron connection influences the next. Training is the process of adjusting these numbers to minimize prediction errors. A model with more parameters can represent more complex patterns but requires more data and compute to train. GPT-4 is estimated to have ~1.8 trillion parameters; smaller models like Llama 3.1 8B have 8 billion.",
+    examples:[
+      {label:"GPT-4 scale", desc:"Estimated ~1.8 trillion parameters. If printed as text, these numbers would fill roughly 10,000 books. They encode everything the model 'knows' about language, facts, and reasoning."},
+      {label:"Llama 3.1 8B", desc:"8 billion parameters — small enough to run on a consumer laptop. Less capable than GPT-4 for complex tasks but surprisingly good for many use cases at near-zero inference cost."},
+      {label:"Parameter count as hype", desc:"More parameters doesn't always mean smarter. DeepSeek R1 matched GPT-4 class models with far fewer parameters by using more efficient training. Efficiency is now as important as scale."},
+    ],
+    analogy:"Parameters are like the <em>settings on an enormous mixing board</em> — billions of dials that together shape the model's 'sound' (output). Training turns all those dials simultaneously through gradient descent until the output sounds right.",
+    why:"Parameter count became the primary proxy for model capability — and drove trillion-dollar GPU investments. But 2025–2026 showed that training efficiency matters as much as raw scale.",
+    related:["neural-network","foundation-models","training-inference","open-weight"]
+  },
+  { id:"context-window", cat:"architecture", title:"Context Window", badge:"Memory limit", isNew:false,
+    summary:"How much text an AI can 'see' and remember at once during a single conversation.",
+    explanation:"A context window is the maximum amount of text (measured in tokens) that a model can process in a single pass — essentially its working memory for a conversation. Everything outside the context window is forgotten. Early GPT-3 had a 4,096 token context (~3,000 words). Modern models like Gemini 1.5 Pro handle 1 million tokens (~700,000 words — several novels). Longer context enables working with entire codebases, legal documents, or book-length conversations.",
+    examples:[
+      {label:"GPT-3.5: 4K tokens", desc:"An early ChatGPT conversation that exceeded ~3,000 words would start 'forgetting' the beginning — the model literally couldn't see what was said earlier."},
+      {label:"Claude 3 Sonnet: 200K tokens", desc:"Can hold an entire Harry Potter book in context — enabling questions like 'find every scene where Snape contradicts himself' across the full text."},
+      {label:"Gemini 1.5 Pro: 1M tokens", desc:"Can process an entire codebase in one pass — enabling questions like 'find all the places this function is called incorrectly' across millions of lines of code."},
+    ],
+    analogy:"Context window is like your desk's surface area while working. A small desk (small context) means you can only have a few papers visible — you have to file things away and can't see connections. A large desk (large context) lets you spread out everything and see the big picture.",
+    why:"Context window size directly determines what tasks AI can do. Summarizing a 500-page report, debugging a large codebase, or remembering a long conversation all require sufficient context.",
+    related:["llm","rag","transformer","attention"]
+  },
+
+  // ── SENSES & LANGUAGE ──
+  { id:"nlp", cat:"interfaces", title:"Natural Language Processing (NLP)", badge:"Language AI", isNew:false,
+    summary:"Teaching machines to understand, interpret, and generate human language.",
+    explanation:"NLP is the branch of AI devoted to human language in all its complexity — reading, writing, translating, summarizing, and answering questions. Language is extraordinarily hard for machines because it's ambiguous, context-dependent, culturally loaded, and constantly evolving. 'I saw a man with a telescope' has two completely different meanings. NLP is the decades-long effort to teach machines to navigate this.",
+    examples:[
+      {label:"Google Translate", desc:"Understands that 'je suis dans le pétrin' means 'I'm in trouble,' not 'I am in the bread dough.' Translates meaning, not words."},
+      {label:"Gmail Smart Compose", desc:"As you type 'Sounds good, see you' it suggests 'then!' — predicting natural completions based on email context and your writing patterns."},
+      {label:"Sentiment analysis at scale", desc:"Amazon automatically classifies millions of product reviews as positive/negative/neutral without human reading — powering star ratings and seller feedback systems."},
+    ],
+    analogy:"Early NLP translated word-by-word: 'The spirit is willing but the flesh is weak' became 'The vodka is good but the meat is rotten.' Modern NLP understands <em>meaning, tone, idiom, and intent</em> — not just vocabulary.",
+    why:"Language is how humans communicate everything important. NLP is what lets AI participate in that — reading contracts, writing reports, answering questions, translating across languages.",
+    related:["llm","tokenization","embeddings","sentiment"]
+  },
+  { id:"tokenization", cat:"interfaces", title:"Tokenization", badge:"Text processing", isNew:false,
+    summary:"How AI breaks text into small units (tokens) it can process mathematically.",
+    explanation:"Before an LLM can process text, it must convert it to numbers. Tokenization is that conversion — splitting text into tokens (roughly, word pieces) and mapping each to a number from the model's vocabulary. 'ChatGPT is amazing' might become tokens [15799, 38, 2898, 318, 4998]. The model processes these numbers, not letters. Token count affects cost (APIs charge per token) and context limits (measured in tokens). One token ≈ 0.75 English words on average.",
+    examples:[
+      {label:"Simple tokenization", desc:"'Hello world' → ['Hello', ' world'] → [15496, 995]. The model sees [15496, 995], not the original text."},
+      {label:"Rare words split", desc:"'uncharacteristically' might tokenize as ['un', 'char', 'acter', 'istically'] — 4 tokens from one word. This is why unusual words cost more tokens."},
+      {label:"API pricing", desc:"OpenAI charges per 1,000 tokens. A typical essay (~750 words) uses ~1,000 tokens. Understanding this helps estimate costs before deploying AI features."},
+    ],
+    analogy:"Tokenization is like a musician reading sheet music. The score (text) is converted into individual notes (tokens) that can be processed by the instrument (model). <em>The music exists as symbols; the instrument processes numbers</em>.",
+    why:"Tokenization explains AI pricing, context limits, and why AI sometimes makes weird errors on unusual words (it's never seen them as a single token in training).",
+    related:["llm","context-window","nlp"]
+  },
+  { id:"embeddings", cat:"interfaces", title:"Embeddings & Vector Space", badge:"Representation", isNew:false,
+    summary:"Converting words, images, or documents into lists of numbers that capture meaning — similar things end up near each other.",
+    explanation:"Embeddings are the way AI represents meaning mathematically. Every word, sentence, image, or document is converted into a vector — a list of hundreds or thousands of numbers. The key insight: things with similar meanings end up at similar coordinates in this 'meaning space.' 'King' minus 'Man' plus 'Woman' ≈ 'Queen' — this arithmetic actually works in embedding space. Vector databases store these embeddings for fast similarity search.",
+    examples:[
+      {label:"Word2Vec classic demo", desc:"In a trained word embedding, 'Paris' − 'France' + 'Germany' ≈ 'Berlin'. The model learned country-capital relationships purely from patterns in text, with no explicit programming."},
+      {label:"Semantic search", desc:"When you search for 'heart disease risk factors' in a medical database, vector search finds documents about 'cardiovascular disease causes' — even though none of those words appeared in your query."},
+      {label:"RAG retrieval", desc:"RAG systems convert your question into an embedding, then find the document chunks with the most similar embeddings — retrieving semantically related content, not just keyword matches."},
+    ],
+    analogy:"Imagine a map where every concept has a location. <em>Similar concepts are neighbors</em>: 'cat' and 'kitten' are nearby; 'cat' and 'automobile' are far apart. Embeddings are that map for any kind of content.",
+    why:"Embeddings are the foundation of semantic search, RAG, recommendation systems, and duplicate detection. They're how AI compares meaning rather than just text.",
+    related:["rag","nlp","vector-db","unsupervised"]
+  },
+  { id:"computer-vision", cat:"interfaces", title:"Computer Vision (CV)", badge:"Visual AI", isNew:false,
+    summary:"Teaching machines to interpret images and video — understanding what they're looking at.",
+    explanation:"Computer Vision enables AI to analyze visual data. A pixel is just a number — a shade value. CV is the art of teaching machines to look at millions of numbers and understand: 'that's a stop sign, partially obscured, at 40 feet.' This involves detecting objects, tracking motion, understanding scenes, reading text in images, and measuring depth. Modern CV uses deep learning (CNNs and Vision Transformers) trained on millions of labeled images.",
+    examples:[
+      {label:"iPhone Face ID", desc:"Projects 30,000+ invisible infrared dots onto your face and builds a precise 3D model in real time. Recognizes you even with a beard, glasses, or 5 years of aging."},
+      {label:"Tesla Autopilot", desc:"Eight cameras stream live video. CV identifies lane markings, other vehicles, cyclists, pedestrians, and traffic signals simultaneously — all in real time at highway speeds."},
+      {label:"Google Photos search", desc:"Type 'birthday cake' and Google finds matching photos from 10 years ago — not because you tagged them, but because CV analyzed the visual content of every image you've uploaded."},
+    ],
+    analogy:"A photo is a grid of millions of numbers — each pixel is just a shade value from 0 to 255. CV teaches a machine to look at those <em>millions of numbers and understand what's happening in the scene</em>. Humans do this effortlessly. It took AI decades to match us.",
+    why:"Anywhere a machine needs to understand the visual world — self-driving cars, medical imaging, security cameras, factory quality control, AR/VR — computer vision is the enabling technology.",
+    related:["deep-learning","cnn","multimodal","robotics"]
+  },
+  { id:"multimodal", cat:"interfaces", title:"Multimodal AI", badge:"Multi-sense", isNew:false,
+    summary:"AI that processes multiple types of input simultaneously — text, images, audio, and video together.",
+    explanation:"Early AI models were strictly single-modal: a language model only read text, an image model only saw pictures. Multimodal AI processes multiple input types simultaneously and reasons across them. GPT-4o can see a photo, read a question about it, and give an answer that integrates both. Gemini 1.5 can watch a video and answer questions about what it saw. This is much closer to how humans actually experience and reason about the world.",
+    examples:[
+      {label:"GPT-4o analyzing a diagram", desc:"Show it a complex network diagram and ask 'what's wrong with this architecture?' It sees the diagram AND understands your text question simultaneously, then gives a technical critique."},
+      {label:"Claude reading a slide deck", desc:"Upload a PowerPoint and ask 'summarize the key metrics.' Claude reads the text on slides AND interprets bar charts and graphs as images — not just the text layer."},
+      {label:"Medical diagnostic AI", desc:"Combines a patient's written symptom notes, X-ray images, and lab result numbers — three different modalities — to suggest a differential diagnosis."},
+    ],
+    analogy:"How you understand a news broadcast: you're <em>reading the chyron, listening to the anchor, and watching the footage</em> — integrating three streams simultaneously. For decades, AI could only handle one stream. Multimodal AI finally closes that gap.",
+    why:"The real world is multimodal. Documents have text and charts. Videos have visuals and speech. Meetings have faces and words. Multimodal AI is what lets AI be useful across the full range of real-world content.",
+    related:["computer-vision","nlp","genai","foundation-models"]
+  },
+  { id:"genai", cat:"interfaces", title:"Generative AI (GenAI)", badge:"Creator", isNew:false,
+    summary:"AI that creates new content — text, images, audio, code, and video — rather than just analyzing existing content.",
+    explanation:"Most early AI was discriminative — it classified or analyzed things. Generative AI produces new original content by learning the underlying distribution of training data and sampling from it. Given a text prompt, it generates a matching image, code, music, or paragraph that didn't exist before. The key architectures powering GenAI include diffusion models (for images), autoregressive transformers (for text and code), and GANs.",
+    examples:[
+      {label:"DALL-E 3 / Midjourney", desc:"Type 'a watercolor painting of a fox reading a book by candlelight in a Victorian library' — in 10 seconds, a fully original image matching that description is created from scratch."},
+      {label:"GitHub Copilot", desc:"A developer writes a comment: '// function that removes duplicates from an email list, case-insensitive.' Copilot generates 10 lines of working code instantly, drawn from patterns in millions of open-source repositories."},
+      {label:"Sora video generation", desc:"OpenAI's Sora generates realistic video from text descriptions — 'a panda bear eating bamboo in a Japanese garden, photorealistic, 4K' — entirely synthesized, no filming required."},
+    ],
+    analogy:"Old AI was a <em>very well-read critic</em> — it could tell you whether a painting was Impressionist or Cubist. GenAI is a <em>trained creator</em> — it can paint you something new in Monet's style. The leap from recognizing patterns to generating from patterns is what makes GenAI so transformative.",
+    why:"GenAI is why AI went from a niche tool to something billions of people use daily. When AI can write, draw, code, compose music, and generate video, it touches nearly every profession.",
+    related:["llm","diffusion","gans","foundation-models"]
+  },
+  { id:"diffusion", cat:"interfaces", title:"Diffusion Models", badge:"Image generation", isNew:false,
+    summary:"The AI architecture behind image generators like DALL-E and Midjourney — starts from noise and gradually denoises it.",
+    explanation:"Diffusion models generate images through a remarkable process: they start with pure random noise and gradually 'denoise' it toward a coherent image guided by a text prompt. During training, the model learns to reverse a process of adding noise to images. During generation, it applies that reversal — starting from noise and running the denoising process repeatedly until a clear image emerges. This gives much higher quality and diversity than older approaches like GANs.",
+    examples:[
+      {label:"DALL-E 3", desc:"OpenAI's image generator uses diffusion. You see it start fuzzy and gradually sharpen — that's literally the diffusion denoising process happening in ~20–50 steps."},
+      {label:"Stable Diffusion (open-source)", desc:"Released openly in 2022, Stable Diffusion democratized image generation. Anyone can run it locally and generate images with no API costs or content restrictions."},
+      {label:"Adobe Firefly", desc:"Adobe integrated diffusion models into Photoshop. Select a region and type 'replace with a sunset sky' — the model diffuses a new background that matches the scene's lighting and style."},
+    ],
+    analogy:"Imagine a photograph being slowly covered by static until it's pure noise. Diffusion trains a model to <em>reverse that process</em> — starting from noise and progressively revealing an image that matches the prompt, like developing a Polaroid in reverse.",
+    why:"Diffusion models replaced GANs as the dominant image generation architecture because they're more stable to train, produce higher quality, and allow better text guidance — enabling the current explosion of AI image tools.",
+    related:["genai","gans","computer-vision","multimodal"]
+  },
+  { id:"gans", cat:"interfaces", title:"GANs — Generative Adversarial Networks", badge:"Older GenAI", isNew:false,
+    summary:"An older generative AI approach where two networks compete — one generates, one discriminates — until the generator fools the discriminator.",
+    explanation:"Introduced by Ian Goodfellow in 2014, GANs were the first major breakthrough in AI image generation. A Generator network creates fake images. A Discriminator network tries to tell fake from real. They compete in a game: the Generator tries to fool the Discriminator; the Discriminator tries to catch fakes. After training, the Generator produces images indistinguishable from real ones. GANs were dominant from 2014–2022 before being largely superseded by diffusion models.",
+    examples:[
+      {label:"StyleGAN face generation", desc:"NVIDIA's StyleGAN generated photorealistic human faces that don't exist — powering the viral 'thispersondoesnotexist.com' website. Every face on that site was GAN-generated."},
+      {label:"Deepfakes", desc:"Early deepfakes used GANs to swap faces in video, creating videos of people saying or doing things they never did — a significant misinformation challenge."},
+      {label:"Synthetic training data", desc:"Companies use GANs to generate synthetic medical images (X-rays, scans) to augment training data for diagnostic models — avoiding privacy issues with real patient data."},
+    ],
+    analogy:"The Generator is a <em>counterfeiter</em>; the Discriminator is a <em>detective</em>. As the detective gets better at spotting fakes, the counterfeiter gets better at making them — until the fakes are indistinguishable from the real thing.",
+    why:"GANs pioneered AI image generation and introduced adversarial training — a concept that influenced safety research, data augmentation, and generative modeling across AI.",
+    related:["genai","diffusion","deep-learning"]
+  },
+
+  // ── KNOWLEDGE & MEMORY ──
+  { id:"foundation-models", cat:"knowledge", title:"Foundation Models", badge:"General base", isNew:false,
+    summary:"Massive general-purpose models trained on diverse data — the base layer everything else is built on.",
+    explanation:"A Foundation Model is trained on enormous amounts of diverse data to build broad, general knowledge that can be adapted for many downstream tasks. Rather than training a model for each specific task, companies train one massive model on diverse data and then fine-tune or prompt it for specific uses. The 'foundation' metaphor is intentional — like architectural foundations, you build everything else on top.",
+    examples:[
+      {label:"GPT-4", desc:"Trained on a vast slice of the internet. Healthcare companies fine-tune it on clinical literature; law firms on case law; retailers on product data. One foundation, thousands of applications."},
+      {label:"Claude 3.5 Sonnet", desc:"Anthropic's foundation model trained on diverse text. Powers Claude.ai chat, but also the coding tools, document analysis, and enterprise integrations built on the API."},
+      {label:"BERT for search engines", desc:"Google's BERT understands the context of search queries. One foundation model improved the quality of billions of daily searches without Google retraining a separate model for each query type."},
+    ],
+    analogy:"A university-educated graduate has <em>broad knowledge from years of varied study</em> but hasn't done the specific job yet. You'd still hire them over someone with no education and train them specifically. Foundation models are that graduate — expensive education already paid for.",
+    why:"Training a capable AI from scratch costs $10M–$100M+. Foundation models let every company start from a powerful base and pay only for the last mile of specialization. They democratized access to capable AI.",
+    related:["llm","fine-tuning","open-weight","parameters"]
+  },
+  { id:"llm", cat:"knowledge", title:"Large Language Models (LLMs)", badge:"Text AI", isNew:false,
+    summary:"Foundation models specialized in text — the technology behind ChatGPT, Claude, and Gemini.",
+    explanation:"A Large Language Model is a foundation model trained specifically on massive amounts of text — books, websites, code, research papers, conversations. 'Large' refers to parameter count — modern LLMs have hundreds of billions to trillions of parameters. This scale, combined with diverse text training, gives them remarkable ability to read, write, summarize, reason, translate, and code. LLMs are the backbone of the current AI assistant revolution.",
+    examples:[
+      {label:"Claude reading a 60-page contract", desc:"Upload a commercial lease. Ask 'what are the key obligations, unusual clauses, and exit terms?' Claude delivers a plain-English summary in under a minute — a task a junior lawyer would take two hours on."},
+      {label:"ChatGPT debugging code", desc:"Paste 200 lines of buggy Python and ask 'why isn't this working?' ChatGPT reads the entire code, identifies the logic error in line 47, explains why it's wrong, and gives a corrected version."},
+      {label:"Gemini translating and summarizing", desc:"Paste a 3,000-word German scientific paper and ask for an English summary of the methodology. Gemini translates, understands the scientific context, and produces an accurate summary."},
+    ],
+    analogy:"Imagine someone who has <em>read every book, article, and webpage ever published</em> and can recall any of it instantly. LLMs don't literally know everything — but they learned the patterns of how knowledgeable people write and reason, which is surprisingly close to the same thing.",
+    why:"LLMs are the technology behind the current AI assistant wave. Their ability to understand language, reason through problems, and generate useful text makes them applicable to nearly every knowledge job.",
+    related:["foundation-models","transformer","rlhf","rag","context-window"]
+  },
+  { id:"rag", cat:"knowledge", title:"RAG — Retrieval-Augmented Generation", badge:"Fact-grounding", isNew:false,
+    summary:"Giving AI access to your own documents before answering — so it's grounded in facts, not just training data.",
+    explanation:"LLMs have two critical weaknesses: their knowledge is frozen at training time, and they never saw your private documents. RAG solves both. Before answering, the AI retrieves relevant passages from a document store using semantic search, then uses those passages as context to generate an accurate, grounded answer. This dramatically reduces hallucinations on domain-specific questions and enables AI to work with private, up-to-date information.",
+    examples:[
+      {label:"HR policy chatbot", desc:"Employee asks 'how many sick days do I get after 3 years?' Without RAG, AI guesses. With RAG, it searches the actual HR policy PDF, finds the exact clause, and answers accurately."},
+      {label:"Legal research assistant", desc:"Lawyer asks 'find cases where force majeure was invoked for supply chain failures.' RAG searches thousands of case files and contracts, surfaces relevant precedents, and quotes key paragraphs."},
+      {label:"Customer support bot", desc:"Searches product manuals, FAQ databases, and past support tickets before answering — ensuring responses are based on actual product documentation, not AI guesswork."},
+    ],
+    analogy:"Without RAG, asking AI about your company is like asking a brilliant friend who <em>has never worked there</em> — they'll give plausible but wrong answers. With RAG, they can instantly read all your company files before answering. The difference between plausible and accurate is the difference between useful and dangerous.",
+    why:"RAG is what makes AI deployable in high-stakes business contexts. It's the bridge between a general AI and one that knows your specific organization's actual policies, data, and history.",
+    related:["llm","embeddings","vector-db","hallucination"]
+  },
+  { id:"vector-db", cat:"knowledge", title:"Vector Databases", badge:"Semantic search", isNew:false,
+    summary:"Special databases that store AI embeddings and find semantically similar content at speed.",
+    explanation:"Traditional databases search by exact matches or keywords. Vector databases search by semantic similarity — finding content that means the same thing even if different words are used. Every piece of content is converted to a vector (embedding) and stored. When you query, your question is also converted to a vector, and the database finds the nearest neighbors — the most semantically similar content. This is the infrastructure that makes RAG and semantic search possible at scale.",
+    examples:[
+      {label:"Pinecone / Weaviate / Chroma", desc:"Popular vector databases used by thousands of companies for RAG implementations. Pinecone can search through a billion vectors in under 100ms."},
+      {label:"Semantic document search", desc:"A law firm stores all 10,000 contracts as vectors. Ask 'find contracts with unusual payment terms' and the system retrieves the 20 most semantically similar contracts — without any keyword matching."},
+      {label:"Product recommendation", desc:"E-commerce stores product descriptions as vectors. 'Similar items' suggestions come from finding products with the nearest embedding to what you viewed — not just same category."},
+    ],
+    analogy:"Imagine a library where books are physically placed near semantically related books — not by title alphabetically, but by <em>meaning</em>. 'Heart disease' is placed near 'cardiovascular health,' 'cholesterol management,' and 'chest pain.' Vector databases are that library.",
+    why:"Vector databases are the infrastructure layer enabling semantic search and RAG. Without them, finding semantically relevant content across millions of documents in real time would be computationally impossible.",
+    related:["embeddings","rag","nlp"]
+  },
+  { id:"hallucination", cat:"knowledge", title:"Hallucination", badge:"AI failure mode", isNew:false,
+    summary:"When AI confidently states something false — a critical limitation of LLMs.",
+    explanation:"AI hallucination occurs when a language model generates plausible-sounding but factually incorrect information, presenting it with the same confidence as correct information. The model doesn't 'know' it's wrong — it's predicting what text should come next, not retrieving verified facts. Hallucinations are particularly dangerous when AI is used for medical, legal, or financial decisions. RAG, grounding, and fact-checking pipelines are the main mitigation strategies.",
+    examples:[
+      {label:"Fake legal citations", desc:"A US lawyer submitted a legal brief where ChatGPT invented 6 non-existent court cases with plausible-sounding citations. He filed them. The judge caught them. He was sanctioned."},
+      {label:"Wrong drug dosages", desc:"Early medical AI chatbots would state incorrect dosages or drug interactions with complete confidence — a life-threatening failure mode in clinical settings."},
+      {label:"Fake biographies", desc:"Ask an LLM about a niche historical figure and it may invent publications, awards, and events that never happened — because it's completing a plausible biography template, not retrieving facts."},
+    ],
+    analogy:"An LLM predicts the most plausible next token. Sometimes <em>the most plausible text is wrong text</em> — like a student who writes confidently on an exam topic they studied superficially. The confidence is real; the accuracy is not.",
+    why:"Hallucinations are the primary reason AI can't simply replace human judgment in high-stakes domains. Understanding this failure mode is essential for anyone deploying AI in consequential applications.",
+    related:["rag","llm","safety-alignment","rlhf"]
+  },
+  { id:"open-weight", cat:"knowledge", title:"Open-Weight Models", badge:"2025 shift", isNew:true,
+    summary:"AI models whose internal weights are publicly released — anyone can download, run, and modify them.",
+    explanation:"Closed models (GPT-4, Claude) are accessed only via API. Open-weight models release the model's weights — the actual learned numbers — for anyone to download. This enables running AI entirely on private hardware (no data leaves your servers), modifying and fine-tuning for specific needs, eliminating per-query API costs, and avoiding dependence on a single vendor. DeepSeek R1's January 2025 MIT-licensed release was a watershed moment — it matched closed frontier models at 1/50th the training cost.",
+    examples:[
+      {label:"DeepSeek R1 (MIT license)", desc:"Released January 2025. Matched OpenAI o1 on math/coding benchmarks. Cost $6M to train vs. estimated $300M+ for comparable closed models. Downloadable, modifiable, deployable on your own servers."},
+      {label:"Meta's Llama 4", desc:"Meta releases Llama weights freely. Hundreds of thousands of developers have fine-tuned it for specific domains — medical, legal, coding, customer service — creating a vast open-source AI ecosystem."},
+      {label:"Hospital privacy use case", desc:"A hospital downloads a medical-tuned open-weight model and runs it on their own servers. Patient data never leaves the building — impossible with any cloud API model."},
+    ],
+    analogy:"Closed models are like <em>renting a professional kitchen</em> — powerful, maintained, but you pay per use and the chef can see everything you cook. Open-weight models are <em>buying your own kitchen</em> — upfront cost, you maintain it yourself, but it's yours: full privacy, full control, no ongoing fees.",
+    why:"The open-weight surge of 2025 — led by DeepSeek, Qwen, and Llama 4 — fundamentally shifted who can compete in AI and how organizations can deploy it. The cost, privacy, and customization advantages have made open-weight models the dominant choice for enterprise on-premises deployments.",
+    related:["foundation-models","fine-tuning","llm","parameters"]
+  },
+
+  // ── ACTION & AGENTS ──
+  { id:"tool-use", cat:"action", title:"Tool Use & APIs", badge:"Digital hands", isNew:false,
+    summary:"Giving AI the ability to call external software, search the web, run code, and take real actions.",
+    explanation:"An AI model on its own can only output text. Tool use extends this by giving the AI structured access to software tools — a web browser, calculator, calendar, database, email client, or code interpreter. The AI decides when to use which tool, calls it, receives the result, and incorporates it into its response. APIs (Application Programming Interfaces) are the connectors between software systems that make this possible.",
+    examples:[
+      {label:"Auto-booking a meeting", desc:"'Schedule a 30-minute call next week with everyone on this email thread.' AI checks four calendars, finds a common open slot, creates the event, sends invites — without you touching the calendar."},
+      {label:"Code execution", desc:"Claude's code interpreter can write Python to analyze a dataset, execute it in a sandbox, get the results, then explain what it found — combining writing and running code in one conversation."},
+      {label:"Claude computer use", desc:"Anthropic's 'computer use' feature gives Claude the ability to move your cursor, click buttons, open applications, and type — treating the entire computer as a set of tools it can operate."},
+    ],
+    analogy:"A consultant who can only give verbal advice is useful but limited. One who can <em>log into your systems, run reports, send emails, and update records</em> is transformative. Tool use is what gives AI hands, not just a voice.",
+    why:"Most valuable knowledge work involves doing things, not just describing them. Tool use is the step that transforms AI from a conversation partner into a digital worker that can actually complete tasks.",
+    related:["agentic-ai","mcp","multi-agent","apis"]
+  },
+  { id:"mcp", cat:"action", title:"MCP — Model Context Protocol", badge:"2025 standard", isNew:true,
+    summary:"The universal standard that lets AI agents connect to any tool or data source without custom coding.",
+    explanation:"Before MCP, connecting an AI to a new system (Salesforce, a database, a calendar) required custom-built integration code every time — slow, expensive, and fragile. MCP (introduced by Anthropic in November 2024, adopted by OpenAI and Google in 2025) is an open protocol that standardizes how AI agents connect to tools and data. Any AI that 'speaks MCP' can instantly connect to any MCP server — like a universal plug standard for AI integrations.",
+    examples:[
+      {label:"Claude + Gmail + Calendar", desc:"Because Gmail and Calendar have MCP servers, Claude can read emails, check availability, and schedule meetings without Anthropic building a custom Gmail integration. One standard, thousands of integrations."},
+      {label:"Enterprise agent on 20 systems", desc:"One AI agent connects to Salesforce (CRM), SAP (finance), Confluence (docs), Slack (messages), and Jira (tasks) — all through MCP, not 20 separate custom integrations."},
+      {label:"VS Code AI coding assistant", desc:"GitHub Copilot uses MCP to access your project files, terminal, test results, and documentation dynamically — enabling AI that actually understands your specific project context."},
+    ],
+    analogy:"Before USB-C, every device had a different charger. MCP is <em>USB-C for AI agents</em> — one standard connector that lets any AI attach to any tool or data source instantly, without bespoke cable-making for each combination.",
+    why:"MCP is the 'plumbing' that makes practical agentic AI possible. Without a standard, building AI agents across enterprise systems was prohibitively complex. MCP's rapid adoption by all major AI labs signals it's becoming the industry standard.",
+    related:["tool-use","agentic-ai","multi-agent","apis"]
+  },
+  { id:"agentic-ai", cat:"action", title:"Agentic AI", badge:"Autonomous", isNew:false,
+    summary:"AI that can plan and execute multi-step tasks autonomously — from a goal to a finished result.",
+    explanation:"Basic AI responds to single prompts. Agentic AI takes an open-ended goal, breaks it into a plan, executes each step (often using tools), checks its own progress, recovers from errors, and delivers a final result — with minimal human intervention. This requires combining LLM reasoning, tool use, memory, and planning. The shift from 'AI as responder' to 'AI as worker' is the core of agentic AI.",
+    examples:[
+      {label:"Competitive research agent", desc:"'Research our top 5 competitors — pricing, funding, product differences — and draft a one-page brief.' The agent searches the web, visits sites, pulls data, compares features, and drafts the brief. You review the output."},
+      {label:"Autonomous IT support", desc:"Monitors system alerts, reads error logs, searches documentation for fixes, attempts standard remediation, and only escalates to a human when it genuinely can't resolve the issue."},
+      {label:"Software engineering agent", desc:"Given a GitHub issue, reads the codebase, identifies the bug, writes a fix, runs tests, and opens a pull request — a complete engineering workflow with no human hand-holding."},
+    ],
+    analogy:"A vending machine (<em>basic AI</em>) does exactly one thing per button press — nothing more. An employee (<em>agentic AI</em>) takes a goal, figures out the steps, handles surprises along the way, uses judgment when things go sideways, and reports back when it's done.",
+    why:"Agentic AI is the frontier most likely to transform knowledge work. It's the path from 'AI as a tool' to 'AI as a coworker' — with all the productivity transformation and governance challenges that implies.",
+    related:["multi-agent","tool-use","mcp","reasoning-models"]
+  },
+  { id:"multi-agent", cat:"action", title:"Multi-Agent Systems", badge:"AI teams", isNew:true,
+    summary:"Networks of specialized AI agents that collaborate, divide work, and check each other's output.",
+    explanation:"A single agent has limits — context window, specialization, speed. Multi-agent systems deploy coordinated networks of specialized agents that divide complex tasks, run in parallel, and synthesize results. An orchestrator agent breaks the goal into subtasks and assigns them; specialist agents execute; a critic agent reviews. This architecture can tackle problems far too large or complex for any single agent — entire codebases, long-running research projects, complex business processes.",
+    examples:[
+      {label:"AI software development team", desc:"Planner agent breaks down requirements. Coding agents write modules in parallel. Testing agent runs tests and files bugs. Documentation agent writes the README. All coordinating through shared memory."},
+      {label:"Financial analysis pipeline", desc:"Orchestrator receives 'analyze Q3 performance vs. competitors.' Spawns 5 agents to pull data from different sources simultaneously. Synthesizer combines outputs into one report — 5x faster than sequential processing."},
+      {label:"AI content production", desc:"Researcher → Writer → Editor → SEO agent in a pipeline. Each specializes; each hands off. Produces publication-ready articles with minimal human review."},
+    ],
+    analogy:"One very smart person can only do so much. <em>A team of specialists</em> — each expert in their domain, coordinating well — accomplishes far more. Multi-agent systems are the organizational structure of AI: not one AI trying to do everything, but many AIs each doing what they do best.",
+    why:"Multi-agent systems enable the most ambitious AI deployments of 2025–2026 — entire codebase analysis, enterprise-scale research, complex workflow automation. They're how AI tackles work that exceeds any single model's capacity.",
+    related:["agentic-ai","mcp","tool-use","reasoning-models"]
+  },
+  { id:"robotics", cat:"action", title:"Robotics & Embodied AI", badge:"Physical world", isNew:false,
+    summary:"AI that acts in the physical world through hardware bodies — sensors, motors, and grippers.",
+    explanation:"Robotics combines AI perception (computer vision, audio, proprioception), AI decision-making (planning, reinforcement learning), and physical actuators (motors, wheels, grippers, legs) to take actions with real-world consequences. This is extraordinarily hard — the physical world is unstructured, unpredictable, and has no 'undo' button. Embodied AI is the broader field asking how AI can learn from physical interaction with an environment.",
+    examples:[
+      {label:"Amazon Kiva warehouse robots", desc:"Navigate warehouse floors autonomously, identify storage pods, pick them up, and bring them to human pickers — reducing the walking distance for humans by 75% and enabling same-day shipping at scale."},
+      {label:"Boston Dynamics Spot", desc:"Four-legged robot that adapts its gait to uneven terrain, climbs stairs, opens doors, and inspects industrial equipment. Uses RL to learn locomotion no human ever explicitly programmed."},
+      {label:"Figure AI / Tesla Optimus", desc:"Humanoid robots being trained to do general-purpose manipulation tasks in warehouses and factories. Still early, but demonstrating that general robotic labor is a realistic near-future possibility."},
+    ],
+    analogy:"All other AI layers are like a <em>brilliant mind living inside a computer</em> — powerful but unable to affect the physical world. Robotics is giving that mind a body so it can pick up a package, weld a car frame, or perform surgery. The challenge: the physical world has no 'undo.'",
+    why:"Manufacturing, logistics, surgery, agriculture, and construction all involve physical work. Robotics is how AI eventually reshapes industries built on human physical labor — not just desk jobs.",
+    related:["computer-vision","reinforcement","deep-learning","agentic-ai"]
+  },
+
+  // ── SAFETY & SOCIETY ──
+  { id:"safety-alignment", cat:"safety", title:"AI Safety & Alignment", badge:"Ethics & control", isNew:false,
+    summary:"The technical and philosophical work of making sure AI behaves safely and in line with human values.",
+    explanation:"Safety is about preventing AI from causing harm — generating dangerous content, making biased decisions, being manipulated. Alignment is the deeper challenge of ensuring AI systems pursue goals that genuinely match human values — not just what was literally specified, but what was actually intended, without harmful side effects. Key techniques include RLHF, red-teaming, Constitutional AI, scalable oversight, and interpretability research.",
+    examples:[
+      {label:"Content safety classifiers", desc:"Every major AI platform runs classifiers that detect and refuse harmful requests — weapons instructions, non-consensual material, self-harm guidance — before they reach the model's output."},
+      {label:"Red-teaming", desc:"Anthropic employs teams whose explicit job is to find every way to make their AI produce harmful outputs — so those failure modes can be patched before public release."},
+      {label:"Constitutional AI", desc:"Anthropic gives Claude a set of principles and has it critique its own draft responses before output — a scalable way to instill values without rating every individual response."},
+    ],
+    analogy:"A new employee might be brilliant but still needs onboarding, a code of conduct, and a manager who catches mistakes. Alignment is that entire system applied to AI — <em>teaching it what we actually value</em>, not just what we literally said. The more capable the AI, the higher the stakes of getting this wrong.",
+    why:"This layer is why the AI industry can't simply race to build the most powerful model. A misaligned powerful AI is worse than a weaker one. Safety and alignment work is what separates a beneficial AI boom from a harmful one.",
+    related:["rlhf","hallucination","ai-governance","agi"]
+  },
+  { id:"interpretability", cat:"safety", title:"Interpretability / Explainability", badge:"Black box opening", isNew:false,
+    summary:"Understanding why an AI made a specific decision — opening the 'black box.'",
+    explanation:"Modern deep learning models are largely black boxes — they produce outputs, but we can't easily explain why they made a specific decision. Interpretability research develops methods to understand what's happening inside neural networks. Explainability (a related but distinct concept) focuses on producing human-understandable explanations for model outputs, even if simplified. Both are critical for deploying AI in regulated industries where decisions must be justified.",
+    examples:[
+      {label:"LIME for loan decisions", desc:"A bank uses LIME (Local Interpretable Model-Agnostic Explanations) to tell applicants why their loan was denied: 'your debt-to-income ratio (weight: 35%) and recent missed payment (weight: 28%) were the main factors.'"},
+      {label:"Anthropic's mechanistic interpretability", desc:"Anthropic researchers identified specific neurons in Claude that activate for concepts like 'the capital of France' and 'deception' — a step toward understanding what AI models actually 'know.'"},
+      {label:"Medical AI explanation requirement", desc:"EU regulations require that AI systems making consequential decisions (credit, hiring, medical) must provide a human-understandable explanation — making interpretability a legal requirement, not just a nice-to-have."},
+    ],
+    analogy:"A doctor who says 'you should take this medication' is useful. A doctor who says 'you should take this because your cholesterol is 240, blood pressure is 150/95, and you have a family history of heart disease' is <em>far more trustworthy and actionable</em>. Interpretability makes AI the second kind of doctor.",
+    why:"Interpretability is critical for trust, regulation, and safety. You can't fix what you can't see. As AI makes more consequential decisions, understanding why it decided what it did becomes increasingly important.",
+    related:["safety-alignment","ai-governance","hallucination"]
+  },
+  { id:"ai-governance", cat:"safety", title:"AI Governance & Regulation", badge:"2025–26 live", isNew:true,
+    summary:"The laws, policies, and standards that govern how AI can be developed and deployed — now legally binding.",
+    explanation:"For the first five years of the modern AI era, governance was largely voluntary. That changed in 2025–2026. The EU AI Act came fully into force, creating a risk-tiered framework with real penalties. The US, UK, and China introduced mandatory disclosure requirements, sector-specific rules, and AI liability frameworks. Companies now have legal compliance obligations — not just ethical ones — around bias testing, audit trails, human oversight, and incident reporting.",
+    examples:[
+      {label:"EU AI Act (fully live 2025)", desc:"Bans certain 'unacceptable risk' uses (social scoring, biometric surveillance in public). Requires 'high-risk' AI (hiring tools, credit scoring, medical devices) to be registered, audited, and documented before deployment."},
+      {label:"Healthcare AI liability", desc:"US hospitals deploying AI for diagnostic recommendations must now document training data, test for demographic bias, and maintain an audit trail — or face regulatory action and legal liability."},
+      {label:"AI copyright cases", desc:"Courts in the US and UK ruled in 2024–2025 on whether training on copyrighted works requires compensation. Outcomes now directly shape what data can legally be used to train models."},
+    ],
+    analogy:"The internet had a 20-year grace period before serious regulation. AI is getting <em>a 5-year grace period at most</em>. Governments learned from the social media era that waiting for self-regulation doesn't work. The rulebook is being written now — compliance is no longer optional.",
+    why:"For any organization deploying AI in 2025–2026, governance is a board-level concern. Legal exposure, reputational risk, and procurement requirements in regulated industries mean that 'we didn't know the rules' is no longer a defense.",
+    related:["safety-alignment","interpretability","bias","mlops"]
+  },
+  { id:"bias", cat:"safety", title:"AI Bias & Fairness", badge:"Ethics", isNew:false,
+    summary:"When AI systems produce systematically unfair outcomes for certain groups — often reflecting biases in training data.",
+    explanation:"AI bias occurs when a model's outputs are systematically skewed against certain groups — by race, gender, age, or other characteristics. Bias typically enters through training data (historical data that reflects past discrimination), through flawed labeling (human labelers with unconscious biases), or through feedback loops (biased decisions create biased outcomes that become training data). Fairness is the challenge of defining and achieving equitable outcomes — which turns out to be mathematically impossible to satisfy all definitions simultaneously.",
+    examples:[
+      {label:"Amazon's hiring tool (2018)", desc:"Amazon built an ML model to screen resumes. It learned from 10 years of historical hiring — which was majority male. The model systematically downranked resumes with the word 'women's' (as in 'women's chess club'). Amazon scrapped it."},
+      {label:"Facial recognition disparities", desc:"MIT research found commercial facial recognition systems had error rates of 0.8% for light-skinned men but 34.7% for dark-skinned women — a 43x disparity. This had real consequences when police used these systems."},
+      {label:"COMPAS recidivism prediction", desc:"A US criminal justice AI tool predicted recidivism (reoffending likelihood). ProPublica found it falsely flagged Black defendants as future criminals at nearly twice the rate of white defendants."},
+    ],
+    analogy:"Garbage in, garbage out — but with discrimination baked in. If you train a model on historical hiring data where women were underpaid and underrepresented, the model <em>learns that pattern as a signal</em>. It doesn't know the history was unfair; it just learned the correlation.",
+    why:"Bias in high-stakes AI systems — hiring, lending, criminal justice, healthcare — can systematically harm already-disadvantaged groups at scale and speed impossible for human decision-making. Bias testing and fairness audits are now legal requirements in many jurisdictions.",
+    related:["safety-alignment","ai-governance","interpretability","supervised"]
+  },
+  { id:"mlops", cat:"safety", title:"MLOps & Deployment", badge:"Operations", isNew:false,
+    summary:"The discipline of deploying, monitoring, and maintaining AI systems reliably at production scale.",
+    explanation:"Building a model that works in a lab is one problem. Running it reliably for millions of users, 24 hours a day, while managing cost, quality, latency, and safety — that's MLOps. This includes deployment pipelines (safely releasing models), monitoring (detecting performance degradation and drift), versioning (managing multiple model versions), cost optimization (routing queries to right-sized models), and incident response (handling model failures in production).",
+    examples:[
+      {label:"Model drift detection", desc:"A fraud model trained in 2022 degrades by 2025 as fraudsters change tactics. MLOps teams track accuracy metrics continuously and trigger retraining before the degradation causes real losses."},
+      {label:"Gradual rollout (canary deployment)", desc:"Spotify deploys a new recommendation model to 1% of users first. If engagement metrics improve, it expands to 5%, then 20%, then 100%. If metrics drop, it rolls back instantly."},
+      {label:"Cost-based model routing", desc:"Running GPT-4 for every query costs millions per day at scale. MLOps engineers route simple queries to smaller, cheaper models (GPT-3.5, Llama 3 8B) and escalate to large models only for complex tasks — cutting costs 80%+."},
+    ],
+    analogy:"Building an AI model is like constructing a power plant. Impressive engineering. But <em>keeping the lights on for millions of homes 24/7</em> — managing outages, scaling to demand, maintaining equipment, optimizing fuel costs — is a completely separate, ongoing challenge. MLOps is that operations team.",
+    why:"Most AI projects that fail do so in production, not research. MLOps is what separates a compelling demo from a reliable product — and it's increasingly treated as a core engineering discipline alongside software development.",
+    related:["ai-governance","safety-alignment","fine-tuning"]
+  },
+
+  // ── EMERGING 2025–2026 ──
+  { id:"reasoning-models", cat:"emerging", title:"Reasoning Models", badge:"2025 frontier", isNew:true,
+    summary:"AI that thinks step-by-step before answering — dramatically better at math, logic, and complex problems.",
+    explanation:"Traditional LLMs jump straight from prompt to answer. Reasoning models generate a chain of intermediate thinking steps first — exploring approaches, checking logic, catching errors — before producing a final response. This 'think before you speak' approach dramatically improves performance on complex tasks. OpenAI's o1/o3, Anthropic's Claude with extended thinking, and DeepSeek R1 (which sparked a global AI industry panic in January 2025) are the leading reasoning models.",
+    examples:[
+      {label:"DeepSeek R1 — January 2025", desc:"Released with MIT open-source license. Matched OpenAI o1 on math and coding benchmarks by training through pure reinforcement learning — at ~$6M vs. estimated $300M+ for comparable US models. Triggered a global rethink of AI economics."},
+      {label:"Solving a hard math problem", desc:"A reasoning model given a complex calculus problem writes out its working: 'Let me try integration by parts... hmm, that leads to an infinite series. Let me try substitution instead...' It catches the dead end before giving you the wrong answer."},
+      {label:"Medical diagnosis reasoning", desc:"Given complex patient symptoms, a reasoning model works through differential diagnoses systematically, eliminating options and explaining why, before arriving at a conclusion — rather than pattern-matching to a single answer."},
+    ],
+    analogy:"Old LLMs were like a student who <em>immediately writes down whatever comes to mind</em> — fast, often right, but wrong in embarrassing ways on hard questions. Reasoning models are like a student who <em>shows their working, checks each step</em>, and only writes the final answer after verifying the logic.",
+    why:"Reasoning models are the biggest architectural shift in LLMs since the Transformer. They dramatically reduce confident wrong answers on complex tasks — making AI far more trustworthy for math, science, legal analysis, and code where errors have real consequences.",
+    related:["llm","rlhf","agentic-ai","agi"]
+  },
+  { id:"world-models", cat:"emerging", title:"World Models", badge:"2025–26", isNew:true,
+    summary:"AI that builds an internal simulation of how the physical world works — enabling prediction and planning.",
+    explanation:"A world model is an AI system that learns an internal representation of how the environment works — predicting what will happen next given the current state and an action. Rather than just perceiving the world, a world model can simulate it: 'if I push this object, it will fall in this direction at this speed.' This capability is fundamental for planning, robotic manipulation, and understanding physical causality. Yann LeCun has argued world models are the path to true AI general intelligence.",
+    examples:[
+      {label:"NVIDIA Cosmos", desc:"NVIDIA's Cosmos (2025) is a physical world foundation model trained on video of real physical interactions. Robots can learn to manipulate objects in Cosmos simulation before being deployed in the real world."},
+      {label:"Google DeepMind Genie 3", desc:"Generates interactive simulated environments from a single image. You can 'enter' a photograph and interact with it as a physics simulation — objects fall, liquids flow, characters respond."},
+      {label:"Video prediction for self-driving", desc:"Waymo and Tesla use world models to predict how other cars, pedestrians, and obstacles will behave over the next few seconds — enabling safer trajectory planning beyond just reacting to current positions."},
+    ],
+    analogy:"When you reach for a glass of water, your brain predicts exactly how the glass will move and how much force you need — <em>you simulate the physics before you act</em>. World models give AI that same predictive simulation capability, enabling planning rather than just reactive behavior.",
+    why:"World models are the frontier between perception (knowing what is) and agency (knowing what to do). They're considered by many researchers to be the missing ingredient between today's AI and AGI — the ability to understand causality and simulate consequences of actions.",
+    related:["robotics","reinforcement","agi","reasoning-models"]
+  },
+  { id:"vibe-coding", cat:"emerging", title:"Vibe Coding", badge:"2025 trend", isNew:true,
+    summary:"Describing what you want an app to do in plain English and letting AI write all the code.",
+    explanation:"Coined in early 2025, 'vibe coding' describes a workflow where a developer (or non-developer) describes the high-level intent of what they want to build, and an AI coding agent writes, iterates, and debugs the entire codebase. The human steers by describing outcomes, not by writing syntax. Tools like Cursor, v0 by Vercel, and Claude code enable this. It dramatically lowers the barrier to building software — non-programmers can ship working apps.",
+    examples:[
+      {label:"Building a SaaS app in a weekend", desc:"A product manager describes a user analytics dashboard in plain English. Cursor generates the full React frontend, Node backend, and database schema. PM iterates by saying 'make the chart blue and add a date filter.' No syntax written."},
+      {label:"Bolt.new for prototyping", desc:"Bolt.new lets anyone type 'build me an inventory management tool with CSV export' and get a working web app — deployed, shareable, fully functional — in under 5 minutes."},
+      {label:"Non-technical founders", desc:"In 2025, a significant number of Y Combinator startups were built by non-technical founders who vibe-coded their MVP using AI tools — a structural shift in what it takes to start a software company."},
+    ],
+    analogy:"Traditional coding is like speaking a foreign language fluently. Vibe coding is like <em>having a fluent interpreter</em> — you say what you want in English, the interpreter translates it into code, and reports back if they need clarification. You direct; they execute.",
+    why:"Vibe coding is democratizing software creation. It's reducing the programmer requirement for building software products and creating a new class of 'AI-native developers' who think in outcomes rather than syntax.",
+    related:["agentic-ai","llm","tool-use","genai"]
+  },
+  { id:"energy-ai", cat:"emerging", title:"Energy & AI Sustainability", badge:"2025 constraint", isNew:true,
+    summary:"The enormous electricity demand of AI — now a geopolitical, business, and environmental concern.",
+    explanation:"AI is extraordinarily energy-intensive. Training a single large model can consume as much electricity as hundreds of homes use in a year. Running it at scale for millions of users multiplies that. Data centers now consume 1–2% of global electricity, with AI as the fastest-growing contributor. This has become a boardroom constraint (energy costs affect which models are economically viable), a geopolitical concern (countries compete for power infrastructure), and an environmental issue (data center emissions and water use).",
+    examples:[
+      {label:"Microsoft restarts nuclear plant", desc:"Microsoft signed a deal to restart the Three Mile Island nuclear plant in Pennsylvania specifically to power its AI data centers — a direct signal of how acute the energy constraint has become."},
+      {label:"DeepSeek's efficiency shock", desc:"DeepSeek R1 (2025) matched frontier US models for ~$6M in compute — roughly 50x more efficient. It proved that training efficiency can be a competitive moat, collapsing NVIDIA's stock by $600B in a day."},
+      {label:"Water consumption", desc:"AI data centers use massive amounts of water for cooling. Google's Iowa facility used 1.5 billion gallons of water in one year — prompting regulatory scrutiny in drought-prone regions."},
+    ],
+    analogy:"The industrial revolution ran on coal. The AI revolution runs on electricity — and a lot of it. <em>Every AI query costs energy.</em> A ChatGPT response uses roughly 10x the electricity of a Google search. At billions of queries per day, that's a national-grid-scale problem.",
+    why:"Energy costs now directly constrain which companies can build frontier AI, which countries can host it, and whether AI's economic benefits outweigh its environmental costs. Model efficiency is now a primary competitive dimension — not just an afterthought.",
+    related:["training-inference","open-weight","mlops"]
+  },
+  { id:"synthetic-data", cat:"emerging", title:"Synthetic Data", badge:"Training innovation", isNew:true,
+    summary:"AI-generated training data — used when real data is scarce, private, or too expensive to collect.",
+    explanation:"High-quality labeled training data is expensive, slow to collect, and often contains privacy issues. Synthetic data solves this by generating artificial examples that have the same statistical properties as real data. AI can generate synthetic medical images, fake financial transactions, simulated sensor readings, or fictional conversations — enabling model training without real-world data collection. In 2025, many frontier models trained on significant proportions of AI-generated synthetic data.",
+    examples:[
+      {label:"Medical imaging augmentation", desc:"A hospital has 1,000 labeled CT scans with rare tumor types — not enough to train a detection model. A GAN generates 50,000 synthetic CT scans with similar characteristics, solving the data scarcity problem."},
+      {label:"Self-play for reasoning models", desc:"DeepSeek R1 was trained largely through synthetic reasoning trajectories — the model generating its own step-by-step problem-solving examples to learn from. No humans wrote the training data."},
+      {label:"Autonomous vehicle simulation", desc:"Waymo generates millions of simulated driving scenarios — rare near-miss situations, edge cases, bad weather — that would take decades to collect in the real world."},
+    ],
+    analogy:"A flight simulator gives pilots thousands of hours of practice in emergencies they might never encounter in real life. <em>Synthetic data is a flight simulator for AI</em> — generating training experiences, including rare and dangerous ones, without requiring the real world to cooperate.",
+    why:"Synthetic data is solving one of AI's hardest scaling challenges. As real web data gets exhausted for pre-training, and as domain-specific private data becomes more valuable, the ability to generate useful synthetic training data is a major competitive advantage.",
+    related:["foundation-models","fine-tuning","gans","diffusion"]
+  },
+];
+
+const catMap = {};
+categories.forEach(c => { catMap[c.id] = c; });
+
+let activeFilter = "all";
+let activeConcept = null;
+
+// Build sidebar
+function buildSidebar(filter = "") {
+  const nav = document.getElementById("sidebar-nav");
+  nav.innerHTML = "";
+  const lf = filter.toLowerCase();
+
+  let visCount = 0;
+  categories.forEach(cat => {
+    const items = concepts.filter(c => c.cat === cat.id && (
+      !lf || c.title.toLowerCase().includes(lf) || c.summary.toLowerCase().includes(lf)
+    ));
+    if (!items.length) return;
+    visCount += items.length;
+    const sec = document.createElement("div");
+    sec.className = "cat-section";
+    sec.innerHTML = `<div class="cat-label">${cat.label}</div>`;
+    items.forEach(c => {
+      const el = document.createElement("div");
+      el.className = "nav-item" + (activeConcept === c.id ? " active" : "");
+      el.innerHTML = `<span class="nav-dot" style="background:${cat.color}"></span>${c.title}${c.isNew ? '<span class="nav-new">new</span>' : ''}`;
+      el.onclick = () => openDrawer(c.id);
+      sec.appendChild(el);
+    });
+    nav.appendChild(sec);
+  });
+
+  document.getElementById("sidebar-count").textContent = `${visCount} concept${visCount !== 1 ? "s" : ""}`;
+}
+
+// Build filter bar
+function buildFilters() {
+  const bar = document.getElementById("filter-bar");
+  const allBtn = document.createElement("button");
+  allBtn.className = "filter-btn active";
+  allBtn.textContent = "All";
+  allBtn.onclick = () => setFilter("all");
+  bar.appendChild(allBtn);
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn";
+    btn.textContent = cat.label;
+    btn.style.cssText = ``;
+    btn.onclick = () => setFilter(cat.id);
+    bar.appendChild(btn);
+  });
+  const newBtn = document.createElement("button");
+  newBtn.className = "filter-btn";
+  newBtn.textContent = "New in 2025–26";
+  newBtn.style.color = "#0F6E56";
+  newBtn.onclick = () => setFilter("new");
+  bar.appendChild(newBtn);
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll(".filter-btn").forEach((b, i) => {
+    b.classList.remove("active");
+  });
+  event.target.classList.add("active");
+  renderGrid();
+}
+
+// Build grid
+function renderGrid(search = "") {
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("empty");
+  grid.innerHTML = "";
+  const sl = search.toLowerCase();
+  const filtered = concepts.filter(c => {
+    const matchFilter = activeFilter === "all" || c.cat === activeFilter || (activeFilter === "new" && c.isNew);
+    const matchSearch = !sl || c.title.toLowerCase().includes(sl) || c.summary.toLowerCase().includes(sl) || c.explanation.toLowerCase().includes(sl);
+    return matchFilter && matchSearch;
+  });
+  if (!filtered.length) {
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+  filtered.forEach(c => {
+    const cat = catMap[c.cat];
+    const card = document.createElement("div");
+    card.className = "concept-card" + (activeConcept === c.id ? " active" : "");
+    card.id = "card-" + c.id;
+    card.innerHTML = `
+      ${c.isNew ? '<span class="card-new-tag">NEW</span>' : ''}
+      <div class="card-top">
+        <div class="card-title">${c.title}</div>
+        <span class="card-badge" style="background:${cat.color}20;color:${cat.color}">${c.badge}</span>
+      </div>
+      <div class="card-summary">${c.summary}</div>
+      <div class="card-cat">${cat.label}</div>
+    `;
+    card.onclick = () => openDrawer(c.id);
+    grid.appendChild(card);
+  });
+}
+
+function openDrawer(id) {
+  const c = concepts.find(x => x.id === id);
+  if (!c) return;
+  activeConcept = id;
+  const cat = catMap[c.cat];
+
+  document.getElementById("d-title").textContent = c.title;
+  document.getElementById("d-tags").innerHTML = `
+    <span class="drawer-tag" style="background:${cat.color}18;color:${cat.color}">${c.badge}</span>
+    <span class="drawer-tag" style="background:var(--bg3);color:var(--t2)">${cat.label}</span>
+    ${c.isNew ? '<span class="drawer-new-tag">New in 2025–2026</span>' : ''}
+  `;
+
+  const relatedHtml = c.related.map(rid => {
+    const rc = concepts.find(x => x.id === rid);
+    return rc ? `<span class="related-chip" onclick="openDrawer('${rid}')">${rc.title}</span>` : '';
+  }).join('');
+
+  document.getElementById("d-body").innerHTML = `
+    <div class="drawer-section">
+      <div class="section-label">What it is</div>
+      <div class="section-text">${c.explanation}</div>
+    </div>
+    <div class="drawer-section">
+      <div class="section-label">Real-world examples</div>
+      <div class="examples-list">${c.examples.map(e => `
+        <div class="example-item">
+          <div class="example-label">${e.label}</div>
+          <div class="example-desc">${e.desc}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="drawer-section">
+      <div class="section-label">Think of it this way</div>
+      <div class="analogy-block" style="border-color:${cat.color}">${c.analogy}</div>
+    </div>
+    <div class="drawer-section">
+      <div class="section-label">Why it matters</div>
+      <div class="why-block">${c.why}</div>
+    </div>
+    ${relatedHtml ? `<div class="drawer-section">
+      <div class="section-label">Related concepts</div>
+      <div class="related-chips">${relatedHtml}</div>
+    </div>` : ''}
+  `;
+
+  document.getElementById("overlay").classList.add("open");
+  document.getElementById("drawer").classList.add("open");
+
+  document.querySelectorAll(".concept-card").forEach(el => el.classList.remove("active"));
+  const cardEl = document.getElementById("card-" + id);
+  if (cardEl) { cardEl.classList.add("active"); cardEl.style.borderColor = cat.color; }
+
+  document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+  buildSidebar(document.getElementById("sidebar-search").value);
+}
+
+function closeDrawer() {
+  activeConcept = null;
+  document.getElementById("overlay").classList.remove("open");
+  document.getElementById("drawer").classList.remove("open");
+  document.querySelectorAll(".concept-card").forEach(el => { el.classList.remove("active"); el.style.borderColor = ""; });
+  buildSidebar(document.getElementById("sidebar-search").value);
+}
+
+function filterSidebar(val) {
+  buildSidebar(val);
+  renderGrid(val);
+}
+
+// Main search (sync with sidebar)
+buildFilters();
+buildSidebar();
+renderGrid();
+</script>
+</body>
+</html>
