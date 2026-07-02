@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Salesforce & Project Jargon Guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f13;
+    --surface: #17171f;
+    --card: #1e1e28;
+    --card-hover: #24242f;
+    --border: rgba(255,255,255,0.07);
+    --border-focus: rgba(255,255,255,0.18);
+    --text: #eeeef2;
+    --text-muted: #7a7a8c;
+    --text-dim: #4a4a5a;
+    --accent: #7c6ff7;
+    --accent-glow: rgba(124,111,247,0.15);
+    --accent-light: rgba(124,111,247,0.12);
+
+    --sf:       #3b82f6; --sf-bg:   rgba(59,130,246,0.1);
+    --arch:     #a855f7; --arch-bg: rgba(168,85,247,0.1);
+    --pm:       #22c55e; --pm-bg:   rgba(34,197,94,0.1);
+    --human:    #f59e0b; --human-bg:rgba(245,158,11,0.1);
+    --phrase:   #ef4444; --phrase-bg:rgba(239,68,68,0.1);
+    --strategy: #8b5cf6; --strategy-bg:rgba(139,92,246,0.1);
+    --mba:      #ec4899; --mba-bg:  rgba(236,72,153,0.1);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  header {
+    padding: 3rem 2rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  header h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    background: linear-gradient(135deg, #eeeef2 0%, #9090b0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.75rem;
+  }
+  header p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 520px;
+  }
+
+  /* Controls */
+  .controls {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 1.25rem;
+  }
+  .search-wrap {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    pointer-events: none;
+    font-size: 16px;
+  }
+  #search {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px 11px 40px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  #search::placeholder { color: var(--text-dim); }
+  #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 6px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    font-size: 12.5px;
+    cursor: pointer;
+    background: var(--surface);
+    color: var(--text-muted);
+    transition: all 0.15s;
+    user-select: none;
+    font-family: inherit;
+  }
+  .tab:hover { border-color: var(--border-focus); color: var(--text); }
+  .tab.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent); font-weight: 600; }
+
+  /* Count */
+  .meta {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* Grid */
+  .grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.2s;
+  }
+  .card:hover { background: var(--card-hover); border-color: rgba(255,255,255,0.12); }
+  .card.open { border-color: var(--accent); background: var(--card-hover); }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .card-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .new-pill {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 99px;
+    background: var(--phrase-bg);
+    color: var(--phrase);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .b-sf       { background: var(--sf-bg);       color: var(--sf); }
+  .b-arch     { background: var(--arch-bg);     color: var(--arch); }
+  .b-pm       { background: var(--pm-bg);       color: var(--pm); }
+  .b-human    { background: var(--human-bg);    color: var(--human); }
+  .b-oneliner { background: var(--phrase-bg);   color: var(--phrase); }
+  .b-strategy { background: var(--strategy-bg); color: var(--strategy); }
+  .b-mba      { background: var(--mba-bg);      color: var(--mba); }
+
+  .card-tagline {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  .card-body {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: #b0b0c4;
+    line-height: 1.7;
+  }
+  .card.open .card-body { display: block; }
+
+  .phrase {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: rgba(124,111,247,0.08);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-size: 12.5px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: #c0bef7;
+    line-height: 1.6;
+  }
+
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-dim);
+    padding: 3rem 0;
+    font-size: 14px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-dim);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    header, .controls, .meta, .grid { padding-left: 1rem; padding-right: 1rem; }
+    header { padding-top: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">Reference Guide</div>
+  <h1>Salesforce & Project Jargon</h1>
+  <p>Technical, strategic, and MBA terms to help you present confidently in meetings and on calls. Click any card to expand.</p>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="search" placeholder="Search terms…" />
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div class="meta" id="meta"></div>
+<div class="grid" id="grid"></div>
+
+<footer>
+  <p>Click any card to expand · Use the tabs or search to filter · <span id="total"></span> terms total</p>
+</footer>
+
+<script>
+var terms = [
+  // Salesforce
+  { title:"Governor limits", cat:"sf", tagline:"Salesforce's hard caps on resources per transaction — SOQL queries, DML rows, CPU time.", detail:"Every Apex transaction runs inside strict limits: 100 SOQL queries, 150 DML statements, 10 seconds CPU. Hitting one crashes your transaction. Knowing these cold signals real platform experience.", phrase:'"We\'re close to the governor limit on DML rows — we need to bulkify that trigger."' },
+  { title:"Bulkification", cat:"sf", tagline:"Writing Apex to process records in collections, not one at a time — the #1 best practice.", detail:"A trigger that does a SOQL query inside a for-loop will hit governor limits the moment a data load runs. Bulkifying means always querying and DML-ing outside loops, using maps to relate records.", phrase:'"That trigger isn\'t bulkified — it\'ll blow the SOQL limit the first time someone runs a batch load."' },
+  { title:"Declarative vs. programmatic", cat:"sf", tagline:"Flows and config vs. Apex and code — always do declarative first, programmatic only when needed.", detail:"Salesforce's core design philosophy: prefer Flow, Validation Rules, and config over Apex. Programmatic solutions are harder to maintain and require a developer.", phrase:'"Can we solve this declaratively with a Flow before we write Apex?"' },
+  { title:"Record-triggered Flow", cat:"sf", tagline:"The modern replacement for Workflow Rules and Process Builder — the declarative automation standard now.", detail:"Salesforce deprecated Process Builder and Workflow Rules. Record-triggered Flows are the current recommended automation tool. Knowing this timeline shows you're up to date.", phrase:'"We should migrate those old Process Builder automations to Record-triggered Flows before the deprecation deadline."' },
+  { title:"Org debt", cat:"sf", tagline:"The Salesforce equivalent of technical debt — dead fields, unused automations, conflicting rules piled up over years.", detail:"Most mature orgs have years of abandoned customizations nobody dares touch. Fields with no data, flows that fire but do nothing, permission sets that duplicate profiles.", phrase:'"Before we build on top of this, we need to understand what org debt we\'re inheriting."' },
+  { title:"Sandbox strategy", cat:"sf", tagline:"How you manage Dev, Full, Partial, and scratch orgs across the delivery pipeline.", detail:"A proper sandbox strategy defines which sandbox type is used for which stage: Dev sandbox for development, Partial for QA, Full for UAT. Scratch orgs are used in SFDX-based development.", phrase:'"Do we have a Full sandbox for UAT, or are we testing in Partial?"' },
+  { title:"Change set vs. SFDX", cat:"sf", tagline:"Manual deployment via UI vs. source-driven deployment with version control and CI/CD.", detail:"Change sets are the legacy deployment method — click and drag, no version history. SFDX with a Git-based pipeline is the modern approach. Asking which the team uses tells you immediately how mature their DevOps is.", phrase:'"Are you deploying via change sets or do you have an SFDX pipeline with source control?"' },
+  { title:"SOQL injection", cat:"sf", tagline:"A security vulnerability where user input manipulates a dynamic SOQL query.", detail:"If user-supplied strings are concatenated directly into a SOQL query, an attacker can manipulate the query to return data they shouldn't see. The fix is using bind variables instead of string concatenation.", phrase:'"That dynamic query is vulnerable to SOQL injection — we need to use bind variables."' },
+
+  // Architecture
+  { title:"Leaky abstraction", cat:"arch", tagline:"An abstraction that was supposed to hide complexity but forces you to understand the internals anyway.", detail:"Every non-trivial abstraction eventually leaks. ORMs that require you to understand the SQL being generated. APIs that expose internal error codes. The abstraction becomes a cost, not a benefit.", phrase:null },
+  { title:"Distributed monolith", cat:"arch", tagline:"Microservices so tightly coupled they must be deployed together. Complexity with none of the benefits.", detail:"Services that share a database, call each other synchronously in chains, and must be released in lock-step. It's not microservices — it's a monolith spread across multiple deployment targets.", phrase:null },
+  { title:"Accidental coupling", cat:"arch", tagline:"Two services that shouldn't know about each other, but do — because someone took a shortcut.", detail:"A shared database table or a direct service call taken six months ago quietly created a dependency. Now changes in one place break things unexpectedly in another.", phrase:null },
+  { title:"Overfitting the org chart", cat:"arch", tagline:"Your system architecture mirrors your company structure, not the problem domain. Conway's Law at its worst.", detail:"Your API boundaries exist because of team boundaries, not because they make technical sense. The system is organized around who built it, not around what it does.", phrase:null },
+  { title:"Primitive obsession", cat:"arch", tagline:"Using raw strings and ints everywhere — a user ID and a product ID are both just 'int'.", detail:"Nothing in the type system stops you from passing a product ID where a user ID is expected. Proper domain types make illegal states unrepresentable and catch bugs at compile time.", phrase:null },
+
+  // Project Management
+  { title:"Definition of done", cat:"pm", tagline:"The shared checklist a story must meet before it's complete — not just code merged.", detail:"A strong DoD includes: code reviewed, tests written, deployed to sandbox, UAT signed off, release notes updated. Without a shared DoD, 'done' means something different to every person on the call.", phrase:'"Can we align on our definition of done before we start the sprint?"' },
+  { title:"Scope creep", cat:"pm", tagline:"Uncontrolled expansion of requirements after sign-off, usually without adjusting timeline or budget.", detail:"Often starts small — 'can we just add one field?' — and compounds. The defense is a clear change control process and a signed-off requirements document.", phrase:'"That\'s scope creep — we need to log it as a change request and assess the timeline impact."' },
+  { title:"RAID log", cat:"pm", tagline:"Risks, Assumptions, Issues, Dependencies — the standard project tracking artifact.", detail:"A RAID log captures what could go wrong (risks), what you're taking for granted (assumptions), what's already wrong (issues), and what you're waiting on (dependencies).", phrase:'"Let\'s make sure this is captured in the RAID log — it\'s a dependency we haven\'t tracked yet."' },
+  { title:"Change management", cat:"pm", tagline:"Preparing users for new systems — often underestimated, often the reason projects fail.", detail:"In Salesforce projects, the technology is often 20% of the challenge; getting users to actually adopt it is 80%. Covers training, communication plans, executive sponsorship, and feedback loops.", phrase:'"The build is on track, but I\'m concerned we haven\'t started change management — adoption will suffer."' },
+  { title:"Hypercare", cat:"pm", tagline:"The elevated support period immediately after go-live — all hands on deck to catch issues fast.", detail:"Typically 2–4 weeks post-launch where the delivery team monitors closely and triages user-reported issues in hours rather than days.", phrase:'"We need to define the hypercare window and who\'s on call before we commit to a go-live date."' },
+  { title:"MVP vs. phase 2", cat:"pm", tagline:"Separating what must go live from what can wait — the most important prioritization conversation.", detail:"Projects fail when MVP expands to include every nice-to-have. Ruthless MVP scoping means asking: what is the minimum that delivers the core business value?", phrase:'"Is this MVP or phase 2? If it\'s not blocking go-live value, let\'s move it out and ship."' },
+  { title:"RACI matrix", cat:"pm", tagline:"Responsible, Accountable, Consulted, Informed — who does what, who decides, who just needs to know.", detail:"The most common reason projects stall is unclear ownership. A RACI forces the conversation: exactly one person is Accountable for every workstream.", phrase:'"Before we go further, can we agree on the RACI — specifically who\'s accountable for sign-off on the data model?"' },
+  { title:"Steering committee", cat:"pm", tagline:"The executive body that resolves escalations, approves scope changes, and keeps the project aligned.", detail:"Not a status meeting — a decision-making body. Issues that can't be resolved at the delivery level get escalated here. If your steerco only hears good news, it's not functioning.", phrase:'"This is above our pay grade to resolve — it needs to go to steerco with a clear recommendation."' },
+  { title:"Critical path", cat:"pm", tagline:"The sequence of tasks that determines the earliest possible finish date — delay any one and the whole project slips.", detail:"The critical path is the chain of dependent tasks with zero float. A delay in a non-critical task is fine; a delay on the critical path moves go-live.", phrase:'"Data migration is on the critical path — if that slips, go-live slips. Everything else has float."' },
+  { title:"Dependency mapping", cat:"pm", tagline:"Explicitly charting what has to happen before something else can start — making blockers visible early.", detail:"Most project delays were predictable. Dependency mapping surfaces them: which teams are you waiting on, which decisions need to be made first, which systems need to be ready.", phrase:'"Let\'s do a dependency mapping exercise before we lock the plan — I suspect we\'re assuming things that aren\'t confirmed yet."' },
+  { title:"Stakeholder fatigue", cat:"pm", tagline:"When key stakeholders disengage because they've been consulted too often, too early, or about the wrong things.", detail:"Over-involving stakeholders in every decision burns their goodwill. By the time you actually need a decision, they've tuned out.", phrase:'"We\'ve been pulling them into every meeting — we\'re going to hit stakeholder fatigue before UAT even starts."' },
+  { title:"Runbook", cat:"pm", tagline:"A documented, step-by-step procedure for go-live or incident response — no improvising at the worst moment.", detail:"A go-live runbook lists every action, in order, with the person responsible and the expected outcome. Projects that go live without a runbook are improvising under pressure.", phrase:'"Do we have a runbook for go-live day? I want every step documented and an owner assigned before we flip the switch."' },
+
+  // Human Factors
+  { title:"Alarm fatigue", cat:"human", tagline:"So many alerts fire so often that engineers start ignoring them — the real alert drowns in noise.", detail:"When alert thresholds are set too low, on-call teams stop trusting the system. The dangerous result: the one real production incident gets ignored along with the noise.", phrase:'"The alerts are noise at this point. We\'ve got alarm fatigue and the real signal is getting lost."' },
+  { title:"Haunted graveyard", cat:"human", tagline:"Legacy code nobody touches, understands, or dares delete. It works, somehow.", detail:"Every organization has at least one. The fix is usually the Strangler Fig pattern — gradually wrapping and replacing the legacy system piece by piece.", phrase:'"That service is a haunted graveyard. We can\'t refactor it, we need to strangle it."' },
+  { title:"Resume-driven development", cat:"human", tagline:"Architectural decisions made to use trendy tech for career reasons, not because the problem requires it.", detail:"Choosing Kubernetes to host a 3-page internal tool. Adopting microservices for a 5-person team. The real driver is the developer's CV, not the problem.", phrase:null },
+  { title:"Chesterton's fence", cat:"human", tagline:"Removing a system or code without understanding why it was put there. Usually ends badly.", detail:"Don't remove that weird validation rule until you've figured out what business case it was solving. The fence exists for a reason — find it first.", phrase:null },
+  { title:"Yak shaving", cat:"human", tagline:"The endless chain of prerequisite tasks that keep you from the original goal.", detail:"You need to fix a bug, but first you need to upgrade a library, but first you need to fix the build pipeline... Three days later you haven't touched the original bug.", phrase:null },
+  { title:"Bikeshedding", cat:"human", tagline:"Spending most meeting time debating trivial decisions while the big ones go unchallenged.", detail:"Named after the observation that committees will approve a nuclear plant but spend an hour arguing the colour of the bike shed. Calling it out by name stops the spiral.", phrase:'"We\'re bikeshedding the field labels — let\'s park it and focus on the data model first."' },
+  { title:"Hero engineer", cat:"human", tagline:"One person who knows everything, fixes everything, and is a single point of failure for the whole project.", detail:"Every team loves their hero — until they go on holiday or quit. Hero culture feels productive but destroys bus factor. Healthy teams document and share knowledge deliberately.", phrase:'"We\'ve got a bus factor of one here. If she\'s out, no one else can touch that integration."' },
+  { title:"Blameless postmortem", cat:"human", tagline:"A retrospective on an incident focused on fixing the system, not punishing the person who triggered it.", detail:"Blame creates a culture where people hide mistakes. Blameless postmortems ask: what conditions made this failure possible? The assumption is that people are competent and the system let them down.", phrase:'"Let\'s run a blameless postmortem — I want to understand the system failure, not find someone to blame."' },
+  { title:"Goodhart's Law", cat:"human", tagline:"When a measure becomes a target, it ceases to be a good measure.", detail:"Measuring developer productivity by lines of code leads to bloated code. In Salesforce: measuring success by number of fields built encourages over-customization. The metric gets gamed, the actual goal gets lost.", phrase:'"We\'re running into Goodhart\'s Law — optimizing for the metric is making the actual outcome worse."' },
+  { title:"Conway's Law", cat:"human", tagline:"Organizations design systems that mirror their own communication structure — whether they intend to or not.", detail:"If your backend team and frontend team don't talk, you'll get a hard API boundary. If sales and service are siloed, your CRM will reflect that.", phrase:'"The integration problems here are a Conway\'s Law issue — the team boundaries are creating the system boundaries."' },
+  { title:"Rubber duck debugging", cat:"human", tagline:"Explaining your problem out loud forces you to find the flaw yourself.", detail:"Named after the practice of explaining code line-by-line to a rubber duck. The act of articulating a problem precisely often reveals the solution before the listener says a word.", phrase:'"Walk me through it step by step — sometimes just explaining it out loud shakes something loose."' },
+
+  // Power Phrases
+  { title:"Metastable state", cat:"oneliner", tagline:"System looks stable but won't self-recover — needs intervention before the next disruption.", detail:"A system that appears healthy but has lost its ability to recover from further stress. Common after partial failures or connection pool exhaustion.", phrase:'"We\'re in a metastable state — it looks fine but it won\'t recover on its own."' },
+  { title:"Hot partition", cat:"oneliner", tagline:"One shard receiving a disproportionate share of traffic — scaling doesn't help, you need a better key.", detail:"If your sharding key clusters too much traffic in one place, adding more nodes won't fix it. The data distribution is the problem.", phrase:'"This is textbook hot partition — we need to rethink the sharding key before we scale."' },
+  { title:"Paving the cowpath", cat:"oneliner", tagline:"Formalizing a workaround that users already invented — building the road where people are already walking.", detail:"Users found a way around a broken process and everyone adopted it informally. Paving the cowpath means making that unofficial path the official one.", phrase:'"Users are already doing this in a roundabout way — let\'s pave the cowpath and make it the official flow."' },
+  { title:"Eating the elephant", cat:"oneliner", tagline:"Breaking an overwhelming problem into small pieces to make progress — one bite at a time.", detail:"Used when a project or migration feels impossibly large. The answer is always to find the smallest deliverable slice that has value on its own.", phrase:'"We can\'t do this all at once — let\'s figure out how to eat the elephant one bite at a time."' },
+  { title:"Boiling the ocean", cat:"oneliner", tagline:"Trying to solve everything at once instead of starting with what matters most.", detail:"The opposite of MVP thinking. A team that wants to migrate every process and retrain every user before going live usually ends in a delayed or failed project.", phrase:'"We\'re trying to boil the ocean here — what\'s the one thing that delivers the most value on day one?"' },
+  { title:"Skin in the game", cat:"oneliner", tagline:"A stakeholder who has something to lose if the project fails — and is therefore genuinely engaged.", detail:"Projects fail when the people approving decisions bear no consequences if those decisions are wrong. A stakeholder with skin in the game shows up, makes decisions, and doesn't disappear at go-live.", phrase:'"We need a business owner with skin in the game — someone whose numbers change when this goes live."' },
+  { title:"Burning the boats", cat:"oneliner", tagline:"Making retreat impossible — committing fully by removing the option to go back.", detail:"In projects: decommissioning the legacy system on go-live day rather than running both in parallel. High risk, but ends the 'just use the old system' excuse.", phrase:'"We need to set a date to burn the boats — if the old system stays up, no one will ever fully adopt this one."' },
+
+  // Strategy
+  { title:"North star metric", cat:"strategy", tagline:"The single number that best captures the core value your project delivers to the business.", detail:"Every project should have one. Not ten KPIs — one metric that, if it moves in the right direction, confirms the project is succeeding.", phrase:'"What\'s our north star metric for this rollout — the one number that tells us if this was worth it?"' },
+  { title:"ROI", cat:"strategy", tagline:"The business case in a single ratio — what we get back relative to what we put in.", detail:"In Salesforce projects, ROI is often qualitative (user adoption, data quality) as well as financial (reduced manual effort, faster sales cycles).", phrase:'"Before we add this feature, what\'s the ROI? If we can\'t articulate it, it probably shouldn\'t be in scope."' },
+  { title:"Total cost of ownership (TCO)", cat:"strategy", tagline:"The full cost of a system over its lifetime — licences, maintenance, training, and support included.", detail:"A custom-built Apex solution might seem cheaper than a managed package — until you factor in the developer time to maintain it over five years.", phrase:'"The build cost looks fine, but what\'s the TCO? Licensing and ongoing maintenance will dwarf the implementation."' },
+  { title:"Fit-gap analysis", cat:"strategy", tagline:"Mapping business requirements against out-of-the-box Salesforce capabilities to find what fits and what needs customization.", detail:"A fit means standard Salesforce handles it. A gap means customization or a process change is needed. Gaps are where budget and risk live.", phrase:'"We need to do a proper fit-gap before we estimate — we\'re assuming a lot of standard functionality that might not apply."' },
+  { title:"Phased rollout", cat:"strategy", tagline:"Delivering the solution in stages rather than a single big-bang go-live.", detail:"Big-bang go-lives concentrate risk. Phased rollouts let you learn from the first wave before rolling out to everyone.", phrase:'"Rather than a big-bang go-live, let\'s propose a phased rollout — start with the UK team and learn before we expand."' },
+  { title:"Platform vs. point solution", cat:"strategy", tagline:"Choosing a flexible foundation you build on vs. a pre-built tool that solves one specific problem.", detail:"Salesforce is a platform play. A point solution is faster but creates integration debt and data silos. The strategic question: are we building a foundation or buying a fix?", phrase:'"This is a platform decision, not a point solution — the build cost is higher but the long-term flexibility is worth it."' },
+  { title:"Stakeholder alignment", cat:"strategy", tagline:"Getting all the right people to agree on goals, priorities, and approach before work begins — not during it.", detail:"The most expensive place to discover misalignment is halfway through a build. 'We all agreed' is only true if it's written down.", phrase:'"I want to make sure we have stakeholder alignment before we kick off the build — can we schedule a sign-off session?"' },
+  { title:"Capability maturity", cat:"strategy", tagline:"How sophisticated and repeatable an organization's processes are — from ad hoc chaos to optimized and measured.", detail:"A level 1 org is firefighting; a level 5 org continuously improves using data. In Salesforce terms: a mature org has clean data, documented processes, an admin team, and a roadmap.", phrase:'"Before we propose an AI roadmap, let\'s assess their capability maturity — if the data is dirty, we\'re getting ahead of ourselves."' },
+  { title:"Digital transformation", cat:"strategy", tagline:"Replacing manual, siloed processes with connected digital systems — Salesforce is often the vehicle.", detail:"True digital transformation isn't just installing software — it's changing how the business operates. The technology enables it; change management and leadership commitment make it happen.", phrase:'"This isn\'t just a CRM implementation — if we do it right, this is a digital transformation of how their sales team operates."' },
+  { title:"Build vs. buy", cat:"strategy", tagline:"The fundamental decision: custom-build the capability or purchase a solution that already exists.", detail:"In Salesforce: custom Apex vs. AppExchange managed package vs. native configuration. Build gives control; buy is faster but creates vendor dependency.", phrase:'"Before we start building, have we checked the AppExchange? This might be a buy-not-build situation."' },
+  { title:"Proof of concept (POC)", cat:"strategy", tagline:"A small, time-boxed prototype to validate that a proposed solution actually works before committing to a full build.", detail:"A POC answers: can this be done? It's deliberately rough — not production-ready. Proposing a POC signals maturity and reduces risk.", phrase:'"Before we commit to this architecture, I\'d like to run a two-week POC — let\'s validate the approach before we build on it."' },
+
+  // MBA
+  { title:"Sunk cost fallacy", cat:"mba", isNew:true, tagline:"Continuing to invest in something failing because of what's already been spent — not because it makes sense going forward.", detail:"We've already spent £500k on this, so we can't stop now — that's the sunk cost fallacy. Past spend is gone regardless of the decision you make today. The only question is: does continuing make sense from here?", phrase:'"I understand we\'ve invested a lot already, but that\'s a sunk cost — the question is whether continuing delivers enough value from this point forward."' },
+  { title:"Opportunity cost", cat:"mba", isNew:true, tagline:"What you give up by choosing one option over another — the value of the road not taken.", detail:"Every decision to build feature A is a decision not to build features B and C. Opportunity cost makes that trade-off explicit. In project prioritization, it's the most honest way to frame the cost of scope creep.", phrase:'"Adding this to scope has an opportunity cost — what are we deprioritizing to make room for it?"' },
+  { title:"Pareto principle (80/20 rule)", cat:"mba", isNew:true, tagline:"80% of the outcomes come from 20% of the causes — find the 20% and focus there first.", detail:"In Salesforce projects: 80% of business value usually comes from 20% of the features. Applying it forces brutal prioritization and prevents gold-plating.", phrase:'"Let\'s apply the 80/20 rule here — which features actually drive most of the business value, and can we ship those first?"' },
+  { title:"Analysis paralysis", cat:"mba", isNew:true, tagline:"Over-analysing a decision to the point where no decision gets made — perfection becoming the enemy of progress.", detail:"Common in discovery phases where every option gets a workshop, a matrix, a risk assessment. The cure is time-boxing decisions: agree on a decision-making deadline and accept that a good decision made now beats a perfect one made too late.", phrase:'"We\'re in analysis paralysis — let\'s time-box this decision to Friday and move forward with the best option we have."' },
+  { title:"First principles thinking", cat:"mba", isNew:true, tagline:"Breaking a problem down to its fundamental truths and reasoning up from there — instead of copying what's been done before.", detail:"Instead of asking 'how do other companies handle this?' ask 'what is this process actually trying to achieve?' Often reveals that a complex legacy workflow exists for a reason that no longer applies.", phrase:'"Let\'s go back to first principles — what is this process actually trying to achieve? Because the current workflow doesn\'t obviously serve that goal."' },
+  { title:"Low-hanging fruit", cat:"mba", isNew:true, tagline:"Quick wins that are easy to deliver and demonstrate value early — building confidence and momentum.", detail:"In Salesforce projects, low-hanging fruit might be a dashboard that takes a day to build but gives leadership visibility they've never had. Delivering these early builds trust with the client.", phrase:'"Let\'s identify the low-hanging fruit first — a few quick wins will build confidence while we work on the complex stuff."' },
+  { title:"Zero-sum vs. win-win", cat:"mba", isNew:true, tagline:"Zero-sum: one side wins, one loses. Win-win: both sides gain. Most good project decisions are win-win.", detail:"Stakeholder conflicts often get framed as zero-sum (IT vs. business, speed vs. quality) when they don't have to be. Reframing toward win-win — where both parties' core interests are met — is a key skill in project governance.", phrase:'"This doesn\'t have to be zero-sum — let\'s find the framing where both teams get what they actually need."' },
+  { title:"Diminishing returns", cat:"mba", isNew:true, tagline:"Each additional unit of effort produces less improvement than the one before — at some point, more input stops being worth it.", detail:"The first 80% of a feature might take 20% of the effort. The last 20% — the edge cases, the polish, the rare scenarios — takes 80%. Recognizing diminishing returns helps you decide when 'good enough' is actually good enough.", phrase:'"We\'re hitting diminishing returns on this — the last three iterations haven\'t meaningfully improved the outcome. Let\'s ship it."' },
+  { title:"SWOT analysis", cat:"mba", isNew:true, tagline:"Strengths, Weaknesses, Opportunities, Threats — the classic framework for assessing a situation before committing to a direction.", detail:"Used in pre-sales, discovery, and strategic reviews. In a Salesforce context: Strengths (what the client already does well), Weaknesses (process gaps, dirty data), Opportunities (automation, 360 view), Threats (user adoption risk, legacy dependencies).", phrase:'"Before we finalize the approach, can we do a quick SWOT? I want to make sure we\'re not missing a threat that could derail the rollout."' },
+  { title:"Core competency", cat:"mba", isNew:true, tagline:"What an organization is distinctively good at — the capability that competitors can't easily replicate.", detail:"Understanding a client's core competency helps you distinguish what to build custom (because it differentiates them) vs. what to configure out of the box (because it's commodity).", phrase:'"Is this process a core competency — something that differentiates them — or is it commodity? Because that changes whether we build or configure."' },
+  { title:"Prisoner's dilemma", cat:"mba", isNew:true, tagline:"A situation where two parties acting in their own self-interest produce a worse outcome than if they had cooperated.", detail:"Comes up in multi-team projects where each team optimizes for their own delivery at the expense of the whole. Team A cuts corners on the API contract to hit their deadline; Team B's integration breaks.", phrase:'"We\'re in a prisoner\'s dilemma — if each team optimizes for their own sprint, the integration will fail. We need a shared definition of done."' },
+  { title:"Parkinson's Law", cat:"mba", isNew:true, tagline:"Work expands to fill the time available for its completion — give a task two weeks and it will take two weeks.", detail:"Sprints exist partly to counteract Parkinson's Law. Fixed timebox = forced prioritization. If a UAT window is open-ended, every minor issue becomes a blocker. Time-boxing is the cure.", phrase:'"We need a hard deadline on UAT — without one, Parkinson\'s Law kicks in and every minor issue becomes a reason to delay go-live."' },
+];
+
+var cats = [
+  { key:"all",      label:"All" },
+  { key:"mba",      label:"MBA" },
+  { key:"strategy", label:"Strategy" },
+  { key:"sf",       label:"Salesforce" },
+  { key:"arch",     label:"Architecture" },
+  { key:"pm",       label:"Project mgmt" },
+  { key:"human",    label:"Human factors" },
+  { key:"oneliner", label:"Power phrases" },
+];
+
+var catLabels = {};
+cats.forEach(function(c){ catLabels[c.key] = c.label; });
+
+var badgeMap = { sf:"b-sf", arch:"b-arch", pm:"b-pm", human:"b-human", oneliner:"b-oneliner", strategy:"b-strategy", mba:"b-mba" };
+
+var activeTab = "all";
+var openCard  = null;
+
+document.getElementById("total").textContent = terms.length;
+
+function renderTabs() {
+  var html = "";
+  cats.forEach(function(c) {
+    var count = c.key === "all" ? terms.length : terms.filter(function(t){ return t.cat === c.key; }).length;
+    html += '<button class="tab' + (activeTab === c.key ? " active" : "") + '" data-key="' + c.key + '">' + c.label + ' <span style="opacity:0.5;font-size:10px">(' + count + ')</span></button>';
+  });
+  document.getElementById("tabs").innerHTML = html;
+  document.querySelectorAll(".tab").forEach(function(el) {
+    el.addEventListener("click", function() {
+      activeTab = this.getAttribute("data-key");
+      openCard = null;
+      renderAll();
+    });
+  });
+}
+
+function renderGrid(filtered) {
+  var grid = document.getElementById("grid");
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty">No terms match — try a different search or tab.</div>';
+    return;
+  }
+  var html = "";
+  filtered.forEach(function(t) {
+    var isOpen = openCard === t.title;
+    var safe = t.title.replace(/"/g, "&quot;");
+    html += '<div class="card' + (isOpen ? " open" : "") + '" data-title="' + safe + '">';
+    html += '<div class="card-top">';
+    html += '<div class="card-title">' + t.title + (t.isNew ? ' <span class="new-pill">new</span>' : '') + '</div>';
+    html += '<span class="badge ' + (badgeMap[t.cat] || "") + '">' + (catLabels[t.cat] || t.cat) + '</span>';
+    html += '</div>';
+    html += '<div class="card-tagline">' + t.tagline + '</div>';
+    html += '<div class="card-body">' + t.detail;
+    if (t.phrase) html += '<div class="phrase">' + t.phrase + '</div>';
+    html += '</div></div>';
+  });
+  grid.innerHTML = html;
+  document.querySelectorAll(".card").forEach(function(el) {
+    el.addEventListener("click", function() {
+      var title = this.getAttribute("data-title");
+      openCard = openCard === title ? null : title;
+      renderAll();
+    });
+  });
+}
+
+function renderAll() {
+  var q = document.getElementById("search").value.toLowerCase().trim();
+  var filtered = terms.filter(function(t) {
+    var matchTab = activeTab === "all" || t.cat === activeTab;
+    var matchQ   = !q || t.title.toLowerCase().includes(q) || t.tagline.toLowerCase().includes(q) || t.detail.toLowerCase().includes(q);
+    return matchTab && matchQ;
+  });
+  document.getElementById("meta").textContent = filtered.length + " term" + (filtered.length !== 1 ? "s" : "") + (q ? ' matching "' + q + '"' : "");
+  renderTabs();
+  renderGrid(filtered);
+}
+
+document.getElementById("search").addEventListener("input", function() { openCard = null; renderAll(); });
+renderAll();
+</script>
+</body>
+</html>
